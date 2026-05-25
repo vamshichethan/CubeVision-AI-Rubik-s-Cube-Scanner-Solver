@@ -21,6 +21,7 @@
 **CubeVision AI turns a physical Rubik's Cube into a validated digital state, computes optimized moves, and teaches the solution through a smooth 3D visualizer.**
 
 [Core Idea](#-core-idea) •
+[Project Phases](#-project-phases) •
 [Features](#-features) •
 [Tech Stack](#-tech-stack) •
 [Architecture](#-system-architecture) •
@@ -54,6 +55,18 @@ Three.js Step Visualizer
 ```
 
 The user scans all six faces of a Rubik's Cube. The app detects sticker colors, validates whether the cube is physically solvable, generates an optimized solution, and animates every move in 3D.
+
+---
+
+## 🗓 Project Phases
+
+| Phase | Focus |
+| --- | --- |
+| Phase 1 | Manual cube input, cube model, move notation, and basic validation |
+| Phase 2 | OpenCV scanner, HSV color calibration, and 3x3 sticker detection |
+| Phase 3 | Solver engine with IDA* / Kociemba-style optimized search |
+| Phase 4 | Three.js visualizer with next, previous, play, and reset controls |
+| Phase 5 | Benchmark dashboard, mistake detection, and Learn Mode |
 
 ---
 
