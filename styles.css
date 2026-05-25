@@ -201,7 +201,7 @@ h2 {
 
 .board-panel {
   display: grid;
-  grid-template-columns: minmax(520px, 1fr) 320px;
+  grid-template-columns: minmax(680px, 1fr) 420px;
   align-items: stretch;
   gap: 18px;
   flex: 1;
@@ -211,8 +211,11 @@ h2 {
 
 .visual-stage {
   position: relative;
-  display: block;
-  min-height: 520px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) 380px;
+  align-items: center;
+  gap: 24px;
+  min-height: 460px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
@@ -239,8 +242,8 @@ h2 {
 .visual-stage::before {
   content: "";
   position: absolute;
-  left: 72%;
-  bottom: 70px;
+  left: 75%;
+  bottom: 54px;
   width: 270px;
   height: 58px;
   border-radius: 50%;
@@ -253,7 +256,7 @@ h2 {
 .stage-copy {
   position: relative;
   z-index: 2;
-  max-width: 470px;
+  max-width: 520px;
 }
 
 .stage-copy h2 {
@@ -264,19 +267,16 @@ h2 {
 }
 
 .cube-preview-wrap {
-  position: absolute;
-  top: 50%;
-  right: 7%;
+  position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  width: min(45%, 430px);
-  height: 390px;
-  transform: translateY(-42%);
+  width: 100%;
+  min-height: 360px;
 }
 
 .cube-preview {
-  --cube-size: clamp(235px, 18vw, 300px);
+  --cube-size: clamp(250px, 16vw, 300px);
   --cube-depth: calc(var(--cube-size) / 2);
   position: relative;
   z-index: 1;
@@ -344,7 +344,7 @@ h2 {
 }
 
 .manual-panel {
-  align-self: start;
+  align-self: stretch;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   background: rgba(12, 17, 24, 0.7);
@@ -373,21 +373,23 @@ h2 {
 
 .cube-net {
   display: grid;
-  grid-template-columns: repeat(4, 68px);
-  grid-template-rows: repeat(3, 68px);
+  grid-template-columns: repeat(4, 88px);
+  grid-template-rows: repeat(3, 88px);
   justify-content: center;
-  gap: 8px;
+  align-content: center;
+  gap: 10px;
+  min-height: 360px;
 }
 
 .face {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 18px repeat(3, 1fr);
-  gap: 4px;
+  grid-template-rows: 16px repeat(3, 1fr);
+  gap: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   background: #0a0e14;
-  padding: 5px;
+  padding: 6px;
   aspect-ratio: 1;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
 }
@@ -395,7 +397,7 @@ h2 {
 .face-title {
   grid-column: 1 / -1;
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   font-weight: 900;
   text-align: center;
 }
@@ -433,6 +435,7 @@ h2 {
 .sticker {
   min-width: 0;
   min-height: 0;
+  aspect-ratio: 1;
   border: 1px solid rgba(0, 0, 0, 0.42);
   border-radius: 5px;
   padding: 0;
@@ -578,6 +581,7 @@ input:focus {
   }
 
   .visual-stage {
+    grid-template-columns: 1fr;
     min-height: 520px;
   }
 
@@ -619,13 +623,8 @@ input:focus {
   }
 
   .cube-preview-wrap {
-    top: auto;
-    right: auto;
-    bottom: 24px;
-    left: 50%;
-    width: min(100%, 260px);
-    height: 230px;
-    transform: translateX(-50%);
+    width: 100%;
+    min-height: 250px;
   }
 
   .cube-preview {
@@ -633,8 +632,9 @@ input:focus {
   }
 
   .cube-net {
-    grid-template-columns: repeat(3, 58px);
-    grid-template-rows: repeat(4, 58px);
+    grid-template-columns: repeat(3, 72px);
+    grid-template-rows: repeat(4, 72px);
+    min-height: 300px;
   }
 
   .face[data-face="U"],
