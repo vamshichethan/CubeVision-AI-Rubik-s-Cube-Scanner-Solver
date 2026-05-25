@@ -1,0 +1,18 @@
+{
+  "name": "cubevision-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phase 1 manual Rubik's Cube input, validation, and move engine for CubeVision AI.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "test": "node tests/cube.test.js"
+  },
+  "keywords": [
+    "rubiks-cube",
+    "computer-vision",
+    "solver",
+    "cube"
+  ],
+  "license": "MIT"
+}

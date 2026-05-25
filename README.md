@@ -62,7 +62,7 @@ The user scans all six faces of a Rubik's Cube. The app detects sticker colors, 
 
 | Phase | Focus |
 | --- | --- |
-| Phase 1 | Manual cube input, cube model, move notation, and basic validation |
+| Phase 1 | Manual cube input, cube model, move notation, and basic validation ✅ |
 | Phase 2 | OpenCV scanner, HSV color calibration, and 3x3 sticker detection |
 | Phase 3 | Solver engine with IDA* / Kociemba-style optimized search |
 | Phase 4 | Three.js visualizer with next, previous, play, and reset controls |

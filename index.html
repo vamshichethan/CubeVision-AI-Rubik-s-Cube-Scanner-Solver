@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CubeVision AI</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="CubeVision AI manual input">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Phase 1</p>
+            <h1>CubeVision AI</h1>
+          </div>
+          <div class="status-pill" id="validationSummary">Ready</div>
+        </header>
+
+        <section class="toolbar" aria-label="Cube controls">
+          <div class="palette" id="palette" aria-label="Sticker color palette"></div>
+          <div class="actions">
+            <button id="validateBtn" type="button">Validate</button>
+            <button id="scrambleBtn" type="button">Scramble</button>
+            <button id="resetBtn" type="button">Reset</button>
+          </div>
+        </section>
+
+        <section class="board-panel">
+          <div class="cube-net" id="cubeNet" aria-label="Manual cube net"></div>
+        </section>
+      </section>
+
+      <aside class="side-panel" aria-label="Move tools and validation">
+        <section>
+          <h2>Move Sequence</h2>
+          <div class="move-row">
+            <input id="moveInput" type="text" value="R U R' U'" aria-label="Move sequence" />
+            <button id="applyMovesBtn" type="button">Apply</button>
+          </div>
+          <p class="hint">Supported moves: U, D, R, L, F, B with ', 2 modifiers.</p>
+        </section>
+
+        <section>
+          <h2>Validation</h2>
+          <div id="validationList" class="validation-list"></div>
+        </section>
+
+        <section>
+          <h2>State</h2>
+          <div id="colorCounts" class="counts-grid"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
