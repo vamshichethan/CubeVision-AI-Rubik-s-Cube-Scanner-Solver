@@ -211,11 +211,8 @@ h2 {
 
 .visual-stage {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.8fr);
-  align-items: center;
-  gap: 22px;
-  min-height: 560px;
+  display: block;
+  min-height: 520px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
@@ -223,7 +220,7 @@ h2 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 40%),
     linear-gradient(145deg, rgba(36, 119, 255, 0.2), rgba(255, 138, 42, 0.12)),
     #10161f;
-  padding: 28px;
+  padding: 34px;
   perspective: 1100px;
 }
 
@@ -242,9 +239,9 @@ h2 {
 .visual-stage::before {
   content: "";
   position: absolute;
-  left: 50%;
-  bottom: 54px;
-  width: 300px;
+  left: 72%;
+  bottom: 70px;
+  width: 270px;
   height: 58px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(0, 0, 0, 0.42), transparent 68%);
@@ -255,28 +252,31 @@ h2 {
 
 .stage-copy {
   position: relative;
-  z-index: 1;
-  align-self: start;
+  z-index: 2;
+  max-width: 470px;
 }
 
 .stage-copy h2 {
-  max-width: 520px;
+  max-width: 430px;
   margin: 0 0 10px;
-  font-size: clamp(2rem, 3.2vw, 3.2rem);
+  font-size: clamp(2.25rem, 3vw, 3.25rem);
   line-height: 1;
 }
 
 .cube-preview-wrap {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  right: 7%;
   z-index: 1;
   display: grid;
   place-items: center;
-  min-height: 420px;
-  padding: 24px 0;
+  width: min(45%, 430px);
+  height: 390px;
+  transform: translateY(-42%);
 }
 
 .cube-preview {
-  --cube-size: clamp(240px, 23vw, 330px);
+  --cube-size: clamp(235px, 18vw, 300px);
   --cube-depth: calc(var(--cube-size) / 2);
   position: relative;
   z-index: 1;
@@ -578,7 +578,6 @@ input:focus {
   }
 
   .visual-stage {
-    grid-template-columns: 1fr;
     min-height: 520px;
   }
 
@@ -611,8 +610,22 @@ input:focus {
     padding: 18px;
   }
 
+  .stage-copy {
+    max-width: 100%;
+  }
+
   .stage-copy h2 {
     font-size: 2rem;
+  }
+
+  .cube-preview-wrap {
+    top: auto;
+    right: auto;
+    bottom: 24px;
+    left: 50%;
+    width: min(100%, 260px);
+    height: 230px;
+    transform: translateX(-50%);
   }
 
   .cube-preview {
