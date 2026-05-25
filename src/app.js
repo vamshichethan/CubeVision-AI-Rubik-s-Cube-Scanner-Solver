@@ -12,6 +12,7 @@ let solutionStartState = cloneState(cube.state);
 
 const palette = document.querySelector("#palette");
 const cubeNet = document.querySelector("#cubeNet");
+const visualCube = document.querySelector("#visualCube");
 const validationSummary = document.querySelector("#validationSummary");
 const validationList = document.querySelector("#validationList");
 const colorCounts = document.querySelector("#colorCounts");
@@ -106,7 +107,7 @@ function renderPalette() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `color-swatch${selectedColor === colorKey ? " is-selected" : ""}`;
-    button.style.backgroundColor = COLORS[colorKey].value;
+    button.style.background = COLORS[colorKey].value;
     button.title = COLORS[colorKey].name;
     button.setAttribute("aria-label", COLORS[colorKey].name);
     button.addEventListener("click", () => {
@@ -119,6 +120,7 @@ function renderPalette() {
 
 function renderCube() {
   cubeNet.innerHTML = "";
+  visualCube.innerHTML = "";
 
   ["U", "L", "F", "R", "B", "D"].forEach((face) => {
     const faceElement = document.createElement("section");
@@ -135,7 +137,7 @@ function renderCube() {
       const sticker = document.createElement("button");
       sticker.type = "button";
       sticker.className = "sticker";
-      sticker.style.backgroundColor = COLORS[colorKey].value;
+      sticker.style.background = COLORS[colorKey].value;
       sticker.title = `${face}${index + 1}: ${COLORS[colorKey].name}`;
       sticker.setAttribute("aria-label", sticker.title);
       sticker.addEventListener("click", () => {
@@ -153,6 +155,25 @@ function renderCube() {
     });
 
     cubeNet.append(faceElement);
+  });
+
+  renderVisualCube();
+}
+
+function renderVisualCube() {
+  [
+    ["U", "preview-face preview-top"],
+    ["F", "preview-face preview-front"],
+    ["R", "preview-face preview-right"]
+  ].forEach(([face, className]) => {
+    const faceElement = document.createElement("div");
+    faceElement.className = className;
+    cube.state[face].forEach((colorKey) => {
+      const sticker = document.createElement("span");
+      sticker.style.background = COLORS[colorKey].value;
+      faceElement.append(sticker);
+    });
+    visualCube.append(faceElement);
   });
 }
 

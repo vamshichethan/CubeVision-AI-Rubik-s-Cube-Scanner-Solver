@@ -11,24 +11,46 @@
       <section class="workspace" aria-label="CubeVision AI manual input">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Phase 1</p>
+            <p class="eyebrow">Vision to solution workspace</p>
             <h1>CubeVision AI</h1>
+            <p class="subtitle">Scan, validate, solve, and replay a Rubik's Cube state from one focused dashboard.</p>
           </div>
-          <div class="status-pill" id="validationSummary">Ready</div>
+          <div class="topbar-status">
+            <span class="metric-pill">6 faces</span>
+            <span class="metric-pill">54 stickers</span>
+            <div class="status-pill" id="validationSummary">Ready</div>
+          </div>
         </header>
 
         <section class="toolbar" aria-label="Cube controls">
-          <div class="palette" id="palette" aria-label="Sticker color palette"></div>
+          <div>
+            <p class="toolbar-label">Paint stickers</p>
+            <div class="palette" id="palette" aria-label="Sticker color palette"></div>
+          </div>
           <div class="actions">
             <button id="validateBtn" type="button">Validate</button>
             <button id="scrambleBtn" type="button">Scramble</button>
-            <button id="solveBtn" type="button">Solve</button>
+            <button id="solveBtn" class="primary-action" type="button">Solve</button>
             <button id="resetBtn" type="button">Reset</button>
           </div>
         </section>
 
         <section class="board-panel">
-          <div class="cube-net" id="cubeNet" aria-label="Manual cube net"></div>
+          <div class="visual-stage">
+            <div class="stage-copy">
+              <p class="eyebrow">Live cube state</p>
+              <h2>Interactive solver preview</h2>
+              <p>Use the scanner buttons, paste moves, or paint stickers directly. The preview and net update together.</p>
+            </div>
+            <div class="cube-preview" id="visualCube" aria-label="3D cube preview"></div>
+          </div>
+          <div>
+            <div class="section-title-row">
+              <h2>Manual cube net</h2>
+              <span>click a square to cycle colors</span>
+            </div>
+            <div class="cube-net" id="cubeNet" aria-label="Manual cube net"></div>
+          </div>
         </section>
       </section>
 
