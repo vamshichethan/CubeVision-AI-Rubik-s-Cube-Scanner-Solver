@@ -39,6 +39,8 @@ const DEFAULT_FACE_COLOR: Record<ScannerFaceLabel, CubeColor> = {
   R: 'red'
 };
 
+const SCAN_ORDER: ScannerFaceLabel[] = ['U', 'D', 'F', 'B', 'L', 'R'];
+
 type Props = {
   cubeState: CubeState;
   onSaveFace: (face: FaceName, stickers: CubeColor[]) => void;
@@ -56,7 +58,7 @@ function fallbackStickers(face: ScannerFaceLabel): ScannedSticker[] {
 
 export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
   const [face, setFace] = useState<ScannerFaceLabel>('U');
-  const [detected, setDetected] = useState<ScannedSticker[]>(fallbackStickers('U'));
+  const [detected, setDetected] = useState<ScannedSticker[] | null>(null);
   const [savedFaces, setSavedFaces] = useState<Record<ScannerFaceLabel, CubeColor[]>>({} as Record<ScannerFaceLabel, CubeColor[]>);
   const [selectedSticker, setSelectedSticker] = useState<number | null>(null);
   const [message, setMessage] = useState('Choose live camera or upload an image.');
@@ -67,9 +69,12 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
   const [isScanning, setIsScanning] = useState(false);
 
   const lowConfidenceCount = useMemo(
-    () => detected.filter((sticker) => sticker.confidence < 0.72).length,
+    () => detected?.filter((sticker) => sticker.confidence < 0.72).length ?? 0,
     [detected]
   );
+
+  const savedCount = (['U', 'D', 'F', 'B', 'L', 'R'] as ScannerFaceLabel[]).filter((label) => savedFaces[label]).length;
+  const canSaveCurrentFace = detected?.length === 9;
 
   const scanFile = async (file: File, targetFace: ScannerFaceLabel) => {
     setPreviewUrl((current) => {
@@ -102,8 +107,13 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
       );
       setMessage(payload.needsManualCorrection ? 'Low confidence stickers need correction.' : 'Face detected.');
     } catch {
-      setDetected(fallbackStickers(targetFace));
-      setMessage('Backend unavailable. Demo fallback generated a face; correct highlighted stickers before saving.');
+      if (file.name.includes('demo-capture')) {
+        setDetected(fallbackStickers(targetFace));
+        setMessage('Demo face generated. Correct highlighted stickers before saving.');
+      } else {
+        setDetected(null);
+        setMessage('No 3x3 face was detected. Retake the photo, upload a clearer image, or switch to Manual.');
+      }
     } finally {
       setIsScanning(false);
     }
@@ -114,27 +124,42 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
       if (current) URL.revokeObjectURL(current);
       return null;
     });
-    setDetected(fallbackStickers(face));
+    setDetected(null);
     setLastSavedFace(null);
-    setMessage(`Retake ${face} face or correct stickers manually.`);
+    setMessage(`Retake ${face} face or upload a clearer image.`);
   };
 
   const updateSticker = (color: CubeColor) => {
     if (selectedSticker === null) return;
     setDetected((current) =>
-      current.map((sticker, index) =>
+      current?.map((sticker, index) =>
         index === selectedSticker ? { ...sticker, color, confidence: 1 } : sticker
-      )
+      ) ?? current
     );
   };
 
   const saveCurrentFace = () => {
+    if (!detected || detected.length !== 9) {
+      setMessage('Capture, upload, or manually create a detected face before saving.');
+      return;
+    }
     const ordered = [...detected].sort((a, b) => a.row - b.row || a.col - b.col);
     const colors = ordered.map((sticker) => sticker.color);
     setSavedFaces((current) => ({ ...current, [face]: colors }));
     onSaveFace(FACE_MAP[face], colors);
     setLastSavedFace(face);
-    setMessage(`Saved ${face} face.`);
+    const nextFace = SCAN_ORDER.find((label) => label !== face && !savedFaces[label]);
+    if (nextFace) {
+      setFace(nextFace);
+      setDetected(inputMode === 'manual' ? fallbackStickers(nextFace) : null);
+      setPreviewUrl((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return null;
+      });
+      setMessage(`Saved ${face} face. Next: scan ${nextFace}.`);
+    } else {
+      setMessage(`Saved ${face} face. All faces are ready to send to the solver.`);
+    }
   };
 
   const buildScannedCube = (): CubeState => {
@@ -147,7 +172,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
 
   const scannedCube = buildScannedCube();
   const validation = validateCube(scannedCube);
-  const allFacesSaved = (['U', 'D', 'F', 'B', 'L', 'R'] as ScannerFaceLabel[]).every((label) => savedFaces[label]);
+  const allFacesSaved = SCAN_ORDER.every((label) => savedFaces[label]);
 
   return (
     <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1800px] p-4">
@@ -181,6 +206,9 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
                   type="button"
                   onClick={() => {
                     setInputMode(mode as InputMode);
+                    if (mode === 'manual' && !detected) {
+                      setDetected(fallbackStickers(face));
+                    }
                     setMessage(
                       mode === 'camera'
                         ? 'Start camera and capture a face.'
@@ -202,7 +230,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
           </section>
           <FaceScanGuide face={face} onFaceChange={(nextFace) => {
             setFace(nextFace);
-            setDetected(fallbackStickers(nextFace));
+            setDetected(inputMode === 'manual' ? fallbackStickers(nextFace) : null);
             setLastSavedFace(null);
             setMessage(`Ready to scan ${nextFace} face.`);
           }} />
@@ -258,7 +286,13 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
               </div>
             )}
             <div className="mb-3 rounded-md bg-slate-50 p-3 text-sm">
-              Low confidence stickers: <strong className={lowConfidenceCount ? 'text-rose-700' : 'text-emerald-700'}>{lowConfidenceCount}</strong>
+              {detected ? (
+                <>
+                  Low confidence stickers: <strong className={lowConfidenceCount ? 'text-rose-700' : 'text-emerald-700'}>{lowConfidenceCount}</strong>
+                </>
+              ) : (
+                <span className="text-slate-600">No detected face yet. Capture or upload an image first.</span>
+              )}
             </div>
             <button
               type="button"
@@ -270,7 +304,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
             </button>
             <button
               type="button"
-              disabled={isScanning}
+              disabled={isScanning || !canSaveCurrentFace}
               onClick={saveCurrentFace}
               className="focus-ring mb-3 flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:bg-slate-300"
             >
@@ -284,7 +318,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
               className="focus-ring flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:bg-slate-300"
             >
               <Send className="h-4 w-4" />
-              Send CubeState to Solver
+              {allFacesSaved ? 'Send CubeState to Solver' : `Scan all faces first (${savedCount}/6)`}
             </button>
           </section>
 

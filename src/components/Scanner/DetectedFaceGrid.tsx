@@ -3,7 +3,7 @@ import type { ScannedSticker } from '../../types/cube';
 import { ScanConfidenceBadge } from './ScanConfidenceBadge';
 
 type Props = {
-  stickers: ScannedSticker[];
+  stickers: ScannedSticker[] | null;
   onStickerClick: (index: number) => void;
 };
 
@@ -11,6 +11,18 @@ export function DetectedFaceGrid({ stickers, onStickerClick }: Props) {
   return (
     <section className="panel rounded-lg p-4">
       <h2 className="mb-3 text-lg font-semibold text-slate-950">Detected Face</h2>
+      {!stickers ? (
+        <div className="grid grid-cols-3 gap-2">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex aspect-square items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 text-xs font-medium text-slate-400"
+            >
+              Empty
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="grid grid-cols-3 gap-2">
         {stickers.map((sticker, index) => (
           <button
@@ -27,6 +39,7 @@ export function DetectedFaceGrid({ stickers, onStickerClick }: Props) {
           </button>
         ))}
       </div>
+      )}
     </section>
   );
 }
