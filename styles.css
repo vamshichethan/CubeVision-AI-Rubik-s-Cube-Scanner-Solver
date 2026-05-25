@@ -148,6 +148,29 @@ h2 {
   flex-wrap: wrap;
 }
 
+.scan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.scan-button {
+  display: grid;
+  min-height: 58px;
+  padding: 8px;
+  text-align: left;
+}
+
+.scan-button strong {
+  color: var(--accent);
+  font-size: 0.96rem;
+}
+
+.scan-button span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .color-swatch {
   width: 42px;
   height: 42px;
@@ -265,13 +288,16 @@ input:focus {
 }
 
 .validation-list,
-.counts-grid {
+.counts-grid,
+.benchmark-table {
   display: grid;
   gap: 8px;
 }
 
 .validation-item,
-.count-item {
+.count-item,
+.benchmark-row,
+.step-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -280,6 +306,23 @@ input:focus {
   border-radius: 8px;
   background: #0d1116;
   padding: 10px 12px;
+}
+
+.benchmark-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+}
+
+.step-card {
+  align-items: flex-start;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.step-card span,
+.benchmark-row span {
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .validation-item strong {

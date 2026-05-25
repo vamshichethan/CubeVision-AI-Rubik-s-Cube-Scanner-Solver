@@ -1,7 +1,14 @@
-import { COLORS, Cube, FACES, validateCube } from "./cube.js";
+import { COLORS, Cube, FACES, cloneState, getStateAfterMoves, validateCube } from "./cube.js";
+import { SAMPLE_SCANS } from "./scanner.js";
+import { benchmarkSolvers, solveCube } from "./solver.js";
 
 const cube = new Cube();
-let selectedColor = "U";
+let selectedColor = null;
+let moveHistory = [];
+let solution = null;
+let solutionIndex = 0;
+let playbackTimer = null;
+let solutionStartState = cloneState(cube.state);
 
 const palette = document.querySelector("#palette");
 const cubeNet = document.querySelector("#cubeNet");
@@ -9,23 +16,88 @@ const validationSummary = document.querySelector("#validationSummary");
 const validationList = document.querySelector("#validationList");
 const colorCounts = document.querySelector("#colorCounts");
 const moveInput = document.querySelector("#moveInput");
+const scanGrid = document.querySelector("#scanGrid");
+const scannerHint = document.querySelector("#scannerHint");
+const stepCard = document.querySelector("#stepCard");
+const benchmarkTable = document.querySelector("#benchmarkTable");
 
 renderPalette();
+renderScanner();
 renderCube();
 renderValidation();
+renderSolution();
+renderBenchmarks();
 
 document.querySelector("#validateBtn").addEventListener("click", renderValidation);
 document.querySelector("#resetBtn").addEventListener("click", () => {
+  stopPlayback();
   cube.reset();
+  moveHistory = [];
+  solution = null;
+  solutionIndex = 0;
+  solutionStartState = cloneState(cube.state);
   renderCube();
   renderValidation();
+  renderSolution();
+  renderBenchmarks();
 });
 document.querySelector("#scrambleBtn").addEventListener("click", () => {
-  applyMoves("R U R' U' F R U R' U' F'");
+  applyMoves("R U R' U' F R U R' U' F'", true);
 });
 document.querySelector("#applyMovesBtn").addEventListener("click", () => {
-  applyMoves(moveInput.value);
+  applyMoves(moveInput.value, true);
 });
+document.querySelector("#solveBtn").addEventListener("click", () => {
+  stopPlayback();
+  solutionStartState = cloneState(cube.state);
+  solution = solveCube(cube.state, moveHistory);
+  solutionIndex = 0;
+  renderSolution();
+  renderBenchmarks();
+});
+document.querySelector("#prevStepBtn").addEventListener("click", () => {
+  stopPlayback();
+  stepSolution(-1);
+});
+document.querySelector("#nextStepBtn").addEventListener("click", () => {
+  stopPlayback();
+  stepSolution(1);
+});
+document.querySelector("#playBtn").addEventListener("click", () => {
+  if (playbackTimer) {
+    stopPlayback();
+    return;
+  }
+  playbackTimer = window.setInterval(() => {
+    if (!stepSolution(1)) {
+      stopPlayback();
+    }
+  }, 700);
+});
+
+function renderScanner() {
+  scanGrid.innerHTML = "";
+
+  FACES.forEach((face) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "scan-button";
+    button.innerHTML = `<strong>${face}</strong><span>${COLORS[face].name}</span>`;
+    button.addEventListener("click", () => {
+      SAMPLE_SCANS[face].forEach((color, index) => cube.setSticker(face, index, color));
+      scannerHint.textContent = `${COLORS[face].name} face captured from calibrated scanner sample.`;
+      moveHistory = [];
+      solution = null;
+      solutionIndex = 0;
+      solutionStartState = cloneState(cube.state);
+      renderCube();
+      renderValidation();
+      renderSolution();
+      renderBenchmarks();
+    });
+    scanGrid.append(button);
+  });
+}
 
 function renderPalette() {
   palette.innerHTML = "";
@@ -67,9 +139,15 @@ function renderCube() {
       sticker.title = `${face}${index + 1}: ${COLORS[colorKey].name}`;
       sticker.setAttribute("aria-label", sticker.title);
       sticker.addEventListener("click", () => {
-        cube.setSticker(face, index, selectedColor);
+        cube.setSticker(face, index, selectedColor ?? nextColor(colorKey));
+        moveHistory = [];
+        solution = null;
+        solutionIndex = 0;
+        solutionStartState = cloneState(cube.state);
         renderCube();
         renderValidation();
+        renderSolution();
+        renderBenchmarks();
       });
       faceElement.append(sticker);
     });
@@ -101,14 +179,99 @@ function renderValidation() {
   });
 }
 
-function applyMoves(sequence) {
+function renderSolution() {
+  const playButton = document.querySelector("#playBtn");
+  playButton.textContent = playbackTimer ? "Pause" : "Play";
+
+  if (!solution) {
+    stepCard.textContent = "Generate a solution to step through moves.";
+    return;
+  }
+
+  if (!solution.solved) {
+    stepCard.innerHTML = "<strong>Manual review needed</strong><span>Use scanner correction or a shorter scramble before solving.</span>";
+    return;
+  }
+
+  if (solution.moves.length === 0) {
+    stepCard.innerHTML = "<strong>Cube is solved</strong><span>No moves needed.</span>";
+    return;
+  }
+
+  const activeIndex = Math.min(solutionIndex, solution.explanations.length - 1);
+  const step = solution.explanations[activeIndex];
+  stepCard.innerHTML = `
+    <strong>${step.title}: ${step.move}</strong>
+    <span>${step.detail}</span>
+    <span>${solution.moves.length - activeIndex - 1} moves remaining • ${solution.strategy}</span>
+  `;
+}
+
+function renderBenchmarks() {
+  const rows = benchmarkSolvers(cube.state, moveHistory);
+  benchmarkTable.innerHTML = rows
+    .map(
+      (row) => `
+        <div class="benchmark-row">
+          <strong>${row.name}</strong>
+          <span>${row.solutionLength} moves</span>
+          <span>${row.timeMs} ms</span>
+          <span>${row.memory}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function nextColor(colorKey) {
+  const currentIndex = FACES.indexOf(colorKey);
+  return FACES[(currentIndex + 1) % FACES.length];
+}
+
+function applyMoves(sequence, trackHistory = false) {
   try {
-    cube.applyAlgorithm(sequence);
+    const moves = cube.applyAlgorithm(sequence);
+    if (trackHistory) {
+      moveHistory.push(...moves);
+    }
+    solution = null;
+    solutionIndex = 0;
+    solutionStartState = cloneState(cube.state);
     renderCube();
     renderValidation();
+    renderSolution();
+    renderBenchmarks();
   } catch (error) {
     validationSummary.textContent = error.message;
     validationSummary.classList.add("is-invalid");
     validationSummary.classList.remove("is-valid");
   }
+}
+
+function stepSolution(direction) {
+  if (!solution?.moves.length) {
+    return false;
+  }
+
+  const nextIndex = solutionIndex + direction;
+  if (nextIndex < 0 || nextIndex > solution.moves.length) {
+    return false;
+  }
+
+  const appliedMoves = solution.moves.slice(0, nextIndex);
+  cube.state = getStateAfterMoves(solutionStartState, appliedMoves);
+  solutionIndex = nextIndex;
+  renderCube();
+  renderValidation();
+  renderSolution();
+  return nextIndex < solution.moves.length;
+}
+
+function stopPlayback() {
+  if (!playbackTimer) {
+    return;
+  }
+  window.clearInterval(playbackTimer);
+  playbackTimer = null;
+  renderSolution();
 }

@@ -89,6 +89,14 @@ export class Cube {
   }
 }
 
+export function serializeState(state) {
+  return FACES.map((face) => state[face].join("")).join("|");
+}
+
+export function isSolved(state) {
+  return FACES.every((face) => state[face].every((color) => color === face));
+}
+
 export function parseMoves(sequence) {
   if (!sequence.trim()) {
     return [];
@@ -98,6 +106,24 @@ export function parseMoves(sequence) {
     .trim()
     .split(/\s+/)
     .map((token) => parseMove(token).token);
+}
+
+export function invertMove(move) {
+  const parsed = parseMove(move);
+  if (parsed.amount === 2) {
+    return parsed.token;
+  }
+  return parsed.prime ? parsed.face : `${parsed.face}'`;
+}
+
+export function invertAlgorithm(moves) {
+  return [...moves].reverse().map((move) => invertMove(move));
+}
+
+export function getStateAfterMoves(state, moves) {
+  const cube = new Cube(state);
+  moves.forEach((move) => cube.applyMove(move));
+  return cube.state;
 }
 
 export function parseMove(token) {

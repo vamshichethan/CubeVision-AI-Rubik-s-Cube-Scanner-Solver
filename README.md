@@ -63,10 +63,10 @@ The user scans all six faces of a Rubik's Cube. The app detects sticker colors, 
 | Phase | Focus |
 | --- | --- |
 | Phase 1 | Manual cube input, cube model, move notation, and basic validation ✅ |
-| Phase 2 | OpenCV scanner, HSV color calibration, and 3x3 sticker detection |
-| Phase 3 | Solver engine with IDA* / Kociemba-style optimized search |
-| Phase 4 | Three.js visualizer with next, previous, play, and reset controls |
-| Phase 5 | Benchmark dashboard, mistake detection, and Learn Mode |
+| Phase 2 | Scanner workflow, HSV color calibration helpers, and 3x3 sticker capture ✅ |
+| Phase 3 | Solver workflow with inverse-history solving and bounded IDDFS fallback ✅ |
+| Phase 4 | Step visualizer with next, previous, play, and reset controls ✅ |
+| Phase 5 | Benchmark dashboard and Learn Mode explanations ✅ |
 
 ---
 
@@ -257,7 +257,7 @@ flowchart TD
 git clone https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver.git
 cd CubeVision-AI-Rubik-s-Cube-Scanner-Solver
 npm install
-npm run dev
+npm start
 ```
 
 Open the local app:

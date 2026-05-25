@@ -22,6 +22,7 @@
           <div class="actions">
             <button id="validateBtn" type="button">Validate</button>
             <button id="scrambleBtn" type="button">Scramble</button>
+            <button id="solveBtn" type="button">Solve</button>
             <button id="resetBtn" type="button">Reset</button>
           </div>
         </section>
@@ -33,12 +34,33 @@
 
       <aside class="side-panel" aria-label="Move tools and validation">
         <section>
+          <h2>Scanner Phase</h2>
+          <div class="scan-grid" id="scanGrid"></div>
+          <p class="hint" id="scannerHint">Capture sample faces or paint manually when lighting is difficult.</p>
+        </section>
+
+        <section>
           <h2>Move Sequence</h2>
           <div class="move-row">
             <input id="moveInput" type="text" value="R U R' U'" aria-label="Move sequence" />
             <button id="applyMovesBtn" type="button">Apply</button>
           </div>
           <p class="hint">Supported moves: U, D, R, L, F, B with ', 2 modifiers.</p>
+        </section>
+
+        <section>
+          <h2>Visualizer Phase</h2>
+          <div class="step-card" id="stepCard">Generate a solution to step through moves.</div>
+          <div class="actions">
+            <button id="prevStepBtn" type="button">Previous</button>
+            <button id="nextStepBtn" type="button">Next</button>
+            <button id="playBtn" type="button">Play</button>
+          </div>
+        </section>
+
+        <section>
+          <h2>Benchmark Phase</h2>
+          <div id="benchmarkTable" class="benchmark-table"></div>
         </section>
 
         <section>
