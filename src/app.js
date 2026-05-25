@@ -11,6 +11,7 @@ let playbackTimer = null;
 let solutionStartState = cloneState(cube.state);
 let cubeRotation = { x: -24, y: -34 };
 let dragStart = null;
+let lastAnimationFrame = null;
 
 const palette = document.querySelector("#palette");
 const cubeNet = document.querySelector("#cubeNet");
@@ -30,6 +31,7 @@ renderCube();
 renderValidation();
 renderSolution();
 renderBenchmarks();
+window.requestAnimationFrame(animateVisualCube);
 
 document.querySelector("#validateBtn").addEventListener("click", renderValidation);
 document.querySelector("#resetBtn").addEventListener("click", () => {
@@ -208,7 +210,24 @@ function renderVisualCube() {
 }
 
 function updateVisualRotation() {
-  visualCube.style.transform = `rotateX(${cubeRotation.x}deg) rotateY(${cubeRotation.y}deg)`;
+  const float = Math.sin(performance.now() / 950) * 4;
+  visualCube.style.transform = `rotateX(${cubeRotation.x + float}deg) rotateY(${cubeRotation.y}deg) rotateZ(${float * 0.25}deg)`;
+}
+
+function animateVisualCube(timestamp) {
+  if (lastAnimationFrame === null) {
+    lastAnimationFrame = timestamp;
+  }
+
+  const delta = timestamp - lastAnimationFrame;
+  lastAnimationFrame = timestamp;
+
+  if (!dragStart) {
+    cubeRotation.y += delta * 0.025;
+    updateVisualRotation();
+  }
+
+  window.requestAnimationFrame(animateVisualCube);
 }
 
 function renderValidation() {

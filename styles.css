@@ -237,6 +237,20 @@ h2 {
   pointer-events: none;
 }
 
+.visual-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 38px;
+  width: 190px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.42), transparent 68%);
+  filter: blur(3px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
 .stage-copy {
   position: relative;
   z-index: 1;
@@ -261,7 +275,7 @@ h2 {
   cursor: grab;
   touch-action: none;
   user-select: none;
-  transition: transform 120ms ease-out;
+  will-change: transform;
 }
 
 .cube-preview:active {
