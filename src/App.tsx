@@ -6,13 +6,15 @@ import { Navbar } from './components/Layout/Navbar';
 import type { AppPage } from './components/Layout/Navbar';
 import { cloneCube, createSolvedCube } from './lib/cubeState';
 import { solveCube } from './lib/mockSolver';
-import { applyMove, inverseMove, parseMove } from './lib/moves';
+import { applyMove, applyMoves, inverseMove, inverseMoves, parseMove } from './lib/moves';
 import { validateCube } from './lib/validators';
 import { BenchmarkDashboard } from './pages/BenchmarkDashboard';
 import { HomePage } from './pages/HomePage';
 import { RecoveryPage } from './pages/RecoveryPage';
 import { ScannerPage } from './pages/ScannerPage';
-import type { AnimationMove, CubeColor, CubeState, Move } from './types/cube';
+import type { AnimationMove, CubeColor, CubeState, Move, MoveFace } from './types/cube';
+
+const SCRAMBLE_FACES: MoveFace[] = ['R', 'L', 'U', 'D', 'F', 'B'];
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
@@ -26,6 +28,7 @@ export default function App() {
   const [animation, setAnimation] = useState<AnimationMove | null>(null);
   const [playbackStartState, setPlaybackStartState] = useState<CubeState>(() => createSolvedCube());
   const [solverMessage, setSolverMessage] = useState('Ready for a verified solution.');
+  const [scrambleMoves, setScrambleMoves] = useState<Move[]>([]);
 
   const isAnimating = Boolean(animation);
   const liveValidation = useMemo(() => validateCube(cubeState), [cubeState]);
@@ -34,6 +37,7 @@ export default function App() {
     setCubeState(nextCube);
     setValidation(validateCube(nextCube));
     setMoves([]);
+    setScrambleMoves([]);
     setCurrentIndex(0);
     setIsPlaying(false);
     setSolverMessage('Cube changed. Run validation before solving.');
@@ -70,6 +74,13 @@ export default function App() {
     setIsPlaying(false);
     setPlaybackStartState(cloneCube(cubeState));
     try {
+      if (scrambleMoves.length > 0) {
+        const solution = inverseMoves(scrambleMoves);
+        setMoves(solution);
+        setCurrentIndex(0);
+        setSolverMessage(`Loaded ${solution.length} verified inverse scramble moves.`);
+        return;
+      }
       const solution = await solveCube(cubeState);
       setMoves(solution);
       setCurrentIndex(0);
@@ -111,6 +122,71 @@ export default function App() {
     setAnimation(null);
     setCubeState(cloneCube(playbackStartState));
     setCurrentIndex(0);
+  };
+
+  const generateScramble = (length: number): Move[] => {
+    const generated: Move[] = [];
+    while (generated.length < length) {
+      const face = SCRAMBLE_FACES[Math.floor(Math.random() * SCRAMBLE_FACES.length)];
+      const previous = generated[generated.length - 1];
+      if (previous?.face === face) continue;
+      generated.push({ face, prime: Math.random() > 0.5 });
+    }
+    return generated;
+  };
+
+  const handleGenerateScramble = (length: number) => {
+    if (isAnimating) return;
+    const scramble = generateScramble(length);
+    const solved = createSolvedCube();
+    const scrambled = applyMoves(solved, scramble);
+    const solution = inverseMoves(scramble);
+    setCubeState(scrambled);
+    setValidation(validateCube(scrambled));
+    setScrambleMoves(scramble);
+    setMoves(solution);
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setAnimation(null);
+    setPlaybackStartState(cloneCube(scrambled));
+    setSolverMessage(`Generated ${length}-move scramble. Inverse solution is loaded.`);
+  };
+
+  const handleResetSolved = () => {
+    if (isAnimating) return;
+    const solved = createSolvedCube();
+    setCubeState(solved);
+    setValidation(validateCube(solved));
+    setScrambleMoves([]);
+    setMoves([]);
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setAnimation(null);
+    setPlaybackStartState(cloneCube(solved));
+    setSolverMessage('Reset to solved cube.');
+  };
+
+  const handleLoadInverseSolution = () => {
+    if (!scrambleMoves.length || isAnimating) return;
+    const solution = inverseMoves(scrambleMoves);
+    setMoves(solution);
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setPlaybackStartState(cloneCube(cubeState));
+    setSolverMessage(`Loaded ${solution.length} inverse scramble moves.`);
+  };
+
+  const handleApplyManualMove = (move: Move) => {
+    if (isAnimating) return;
+    const nextCube = applyMove(cubeState, move);
+    setCubeState(nextCube);
+    setValidation(validateCube(nextCube));
+    setScrambleMoves([]);
+    setMoves([]);
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setPlaybackStartState(cloneCube(nextCube));
+    setSolverMessage(`Applied manual move ${move.face}${move.prime ? "'" : ''}.`);
   };
 
   useEffect(() => {
@@ -187,6 +263,11 @@ export default function App() {
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onReset={handleResetPlayback}
+              scrambleMoves={scrambleMoves}
+              onGenerateScramble={handleGenerateScramble}
+              onResetSolved={handleResetSolved}
+              onLoadInverseSolution={handleLoadInverseSolution}
+              onApplyManualMove={handleApplyManualMove}
             />
           </div>
         </main>
