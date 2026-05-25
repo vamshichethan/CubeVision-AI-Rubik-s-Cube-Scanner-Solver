@@ -21,6 +21,7 @@ export type Move = {
 export type ValidationResult = {
   valid: boolean;
   errors: string[];
+  warnings?: string[];
   counts: Record<CubeColor, number>;
 };
 

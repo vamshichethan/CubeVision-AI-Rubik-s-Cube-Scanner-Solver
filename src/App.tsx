@@ -29,6 +29,7 @@ export default function App() {
   const [playbackStartState, setPlaybackStartState] = useState<CubeState>(() => createSolvedCube());
   const [solverMessage, setSolverMessage] = useState('Ready for a verified solution.');
   const [scrambleMoves, setScrambleMoves] = useState<Move[]>([]);
+  const [legalHistoryMoves, setLegalHistoryMoves] = useState<Move[]>([]);
 
   const isAnimating = Boolean(animation);
   const liveValidation = useMemo(() => validateCube(cubeState), [cubeState]);
@@ -38,6 +39,7 @@ export default function App() {
     setValidation(validateCube(nextCube));
     setMoves([]);
     setScrambleMoves([]);
+    setLegalHistoryMoves([]);
     setCurrentIndex(0);
     setIsPlaying(false);
     setSolverMessage('Cube changed. Run validation before solving.');
@@ -74,11 +76,11 @@ export default function App() {
     setIsPlaying(false);
     setPlaybackStartState(cloneCube(cubeState));
     try {
-      if (scrambleMoves.length > 0) {
-        const solution = inverseMoves(scrambleMoves);
+      if (legalHistoryMoves.length > 0) {
+        const solution = inverseMoves(legalHistoryMoves);
         setMoves(solution);
         setCurrentIndex(0);
-        setSolverMessage(`Loaded ${solution.length} verified inverse scramble moves.`);
+        setSolverMessage(`Loaded ${solution.length} verified inverse history moves.`);
         return;
       }
       const solution = await solveCube(cubeState);
@@ -144,6 +146,7 @@ export default function App() {
     setCubeState(scrambled);
     setValidation(validateCube(scrambled));
     setScrambleMoves(scramble);
+    setLegalHistoryMoves(scramble);
     setMoves(solution);
     setCurrentIndex(0);
     setIsPlaying(false);
@@ -158,6 +161,7 @@ export default function App() {
     setCubeState(solved);
     setValidation(validateCube(solved));
     setScrambleMoves([]);
+    setLegalHistoryMoves([]);
     setMoves([]);
     setCurrentIndex(0);
     setIsPlaying(false);
@@ -182,6 +186,7 @@ export default function App() {
     setCubeState(nextCube);
     setValidation(validateCube(nextCube));
     setScrambleMoves([]);
+    setLegalHistoryMoves((history) => [...history, move]);
     setMoves([]);
     setCurrentIndex(0);
     setIsPlaying(false);
