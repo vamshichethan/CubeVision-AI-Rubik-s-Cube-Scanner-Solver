@@ -58,21 +58,21 @@ const workflows: Array<{
 export function HomePage({ validationValid, moveCount, solverMessage, onNavigate }: Props) {
   return (
     <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1800px] p-4">
-      <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="grid items-start gap-4 xl:grid-cols-[minmax(680px,1fr)_430px]">
         <div className="panel overflow-hidden rounded-lg">
-          <div className="grid min-h-[380px] gap-6 p-6 lg:grid-cols-[1fr_260px] lg:p-8">
+          <div className="grid gap-6 p-6 lg:grid-cols-[1fr_280px] lg:p-8">
             <div className="flex flex-col justify-between gap-6">
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800">
                   <Sparkles className="h-4 w-4" />
                   CubeVision AI command center
                 </div>
-                <h2 className="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 md:text-5xl">
-                  Scan, solve, verify, and benchmark one cube workflow.
+                <h2 className="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 lg:text-5xl">
+                  Your Rubik’s cube assistant, arranged for real work.
                 </h2>
                 <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-                  The app is now organized around the real tasks: capture cube input, solve in 3D,
-                  recover from mistakes, and compare solver engines.
+                  Scan faces, correct colors, inspect the cube in 3D, verify each move, and compare
+                  algorithms without jumping through a long documentation page.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -95,7 +95,7 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
               </div>
             </div>
 
-            <div className="grid content-end gap-3">
+            <div className="grid gap-3 self-center">
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <div className="mb-2 text-sm font-semibold text-slate-500">Cube State</div>
                 <div className={validationValid ? 'text-2xl font-bold text-emerald-700' : 'text-2xl font-bold text-amber-700'}>
@@ -114,19 +114,53 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
           </div>
         </div>
 
-        <div className="panel self-start rounded-lg p-6">
-            <div className="mb-3 flex items-center gap-3">
+        <div className="grid gap-4">
+          <div className="panel rounded-lg p-6">
+            <div className="mb-4 flex items-center gap-3">
               <div className="rounded-md bg-emerald-100 p-2 text-emerald-700">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
+              <div>
+                <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
+                <p className="text-sm text-slate-600">A clean path through the app.</p>
+              </div>
             </div>
-            <ol className="space-y-2 text-sm text-slate-700">
-              <li>1. Scan or upload six faces.</li>
-              <li>2. Correct highlighted stickers.</li>
-              <li>3. Send CubeState to the solver.</li>
-              <li>4. Animate and verify each move.</li>
+            <ol className="grid gap-2 text-sm text-slate-700">
+              {[
+                'Scan or upload six faces',
+                'Correct highlighted stickers',
+                'Send CubeState to the solver',
+                'Animate and verify each move'
+              ].map((step, index) => (
+                <li key={step} className="flex items-center gap-3 rounded-md bg-slate-50 px-3 py-2">
+                  <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-xs font-bold text-blue-700 shadow-sm">
+                    {index + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
             </ol>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={() => onNavigate('recovery')}
+              className="panel focus-ring rounded-lg p-4 text-left hover:border-amber-300"
+            >
+              <ShieldAlert className="mb-3 h-5 w-5 text-amber-700" />
+              <div className="text-sm font-bold text-slate-950">Mistake recovery</div>
+              <div className="mt-1 text-xs leading-5 text-slate-600">Check a physical move before continuing.</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate('benchmarks')}
+              className="panel focus-ring rounded-lg p-4 text-left hover:border-blue-300"
+            >
+              <BarChart3 className="mb-3 h-5 w-5 text-blue-700" />
+              <div className="text-sm font-bold text-slate-950">Benchmark lab</div>
+              <div className="mt-1 text-xs leading-5 text-slate-600">Compare solver speed and search cost.</div>
+            </button>
+          </div>
         </div>
       </section>
 
