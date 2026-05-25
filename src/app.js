@@ -9,6 +9,8 @@ let solution = null;
 let solutionIndex = 0;
 let playbackTimer = null;
 let solutionStartState = cloneState(cube.state);
+let cubeRotation = { x: -24, y: -34 };
+let dragStart = null;
 
 const palette = document.querySelector("#palette");
 const cubeNet = document.querySelector("#cubeNet");
@@ -74,6 +76,30 @@ document.querySelector("#playBtn").addEventListener("click", () => {
       stopPlayback();
     }
   }, 700);
+});
+visualCube.addEventListener("pointerdown", (event) => {
+  dragStart = {
+    x: event.clientX,
+    y: event.clientY,
+    rotation: { ...cubeRotation }
+  };
+  visualCube.setPointerCapture(event.pointerId);
+});
+visualCube.addEventListener("pointermove", (event) => {
+  if (!dragStart) {
+    return;
+  }
+  cubeRotation = {
+    x: Math.max(-75, Math.min(75, dragStart.rotation.x - (event.clientY - dragStart.y) * 0.45)),
+    y: dragStart.rotation.y + (event.clientX - dragStart.x) * 0.45
+  };
+  updateVisualRotation();
+});
+visualCube.addEventListener("pointerup", () => {
+  dragStart = null;
+});
+visualCube.addEventListener("pointercancel", () => {
+  dragStart = null;
 });
 
 function renderScanner() {
@@ -162,9 +188,12 @@ function renderCube() {
 
 function renderVisualCube() {
   [
-    ["U", "preview-face preview-top"],
     ["F", "preview-face preview-front"],
-    ["R", "preview-face preview-right"]
+    ["B", "preview-face preview-back"],
+    ["R", "preview-face preview-right"],
+    ["L", "preview-face preview-left"],
+    ["U", "preview-face preview-top"],
+    ["D", "preview-face preview-bottom"]
   ].forEach(([face, className]) => {
     const faceElement = document.createElement("div");
     faceElement.className = className;
@@ -175,6 +204,11 @@ function renderVisualCube() {
     });
     visualCube.append(faceElement);
   });
+  updateVisualRotation();
+}
+
+function updateVisualRotation() {
+  visualCube.style.transform = `rotateX(${cubeRotation.x}deg) rotateY(${cubeRotation.y}deg)`;
 }
 
 function renderValidation() {

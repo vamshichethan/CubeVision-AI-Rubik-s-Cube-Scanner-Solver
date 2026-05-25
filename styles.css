@@ -222,6 +222,7 @@ h2 {
     linear-gradient(145deg, rgba(36, 119, 255, 0.2), rgba(255, 138, 42, 0.12)),
     #10161f;
   padding: 24px;
+  perspective: 900px;
 }
 
 .visual-stage::after {
@@ -257,7 +258,14 @@ h2 {
   align-self: center;
   margin: 52px 0 28px;
   transform-style: preserve-3d;
-  transform: rotateX(-24deg) rotateY(-34deg) rotateZ(1deg);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: transform 120ms ease-out;
+}
+
+.cube-preview:active {
+  cursor: grabbing;
 }
 
 .preview-face {
@@ -271,7 +279,8 @@ h2 {
   border-radius: 12px;
   background: #070a0f;
   padding: 10px;
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.34);
+  backface-visibility: visible;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
 }
 
 .preview-face span {
@@ -283,12 +292,29 @@ h2 {
   transform: translateZ(90px);
 }
 
+.preview-back {
+  filter: brightness(0.72);
+  transform: rotateY(180deg) translateZ(90px);
+}
+
 .preview-right {
+  filter: brightness(0.92);
   transform: rotateY(90deg) translateZ(90px);
 }
 
+.preview-left {
+  filter: brightness(0.82);
+  transform: rotateY(-90deg) translateZ(90px);
+}
+
 .preview-top {
+  filter: brightness(1.08);
   transform: rotateX(90deg) translateZ(90px);
+}
+
+.preview-bottom {
+  filter: brightness(0.78);
+  transform: rotateX(-90deg) translateZ(90px);
 }
 
 .section-title-row {
