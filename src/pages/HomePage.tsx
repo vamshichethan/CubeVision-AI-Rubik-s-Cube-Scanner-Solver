@@ -114,8 +114,7 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          <div className="panel rounded-lg p-5">
+        <div className="panel self-start rounded-lg p-6">
             <div className="mb-3 flex items-center gap-3">
               <div className="rounded-md bg-emerald-100 p-2 text-emerald-700">
                 <CheckCircle2 className="h-5 w-5" />
@@ -128,18 +127,6 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
               <li>3. Send CubeState to the solver.</li>
               <li>4. Animate and verify each move.</li>
             </ol>
-          </div>
-          <div className="panel rounded-lg p-5">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="rounded-md bg-slate-900 p-2 text-white">
-                <BarChart3 className="h-5 w-5" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-950">Resume-Ready Modules</h3>
-            </div>
-            <p className="text-sm leading-6 text-slate-700">
-              Each page maps to a clean subsystem: input, visualization, solving, recovery, and benchmarks.
-            </p>
-          </div>
         </div>
       </section>
 
