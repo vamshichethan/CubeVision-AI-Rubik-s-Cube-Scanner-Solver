@@ -10,7 +10,7 @@ type Props = {
 
 export function FaceGrid({ face, stickers, selectedColor, onStickerChange }: Props) {
   return (
-    <section className="rounded-md border border-slate-200 bg-white p-2.5">
+    <section className="rounded-md border border-slate-200 bg-white p-2">
       <div className="mb-1.5 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-700">{FACE_LABELS[face]}</h3>
         <span className="text-xs text-slate-500">3x3</span>
@@ -23,7 +23,7 @@ export function FaceGrid({ face, stickers, selectedColor, onStickerChange }: Pro
             title={`${FACE_LABELS[face]} sticker ${index + 1}`}
             aria-label={`${FACE_LABELS[face]} sticker ${index + 1}`}
             onClick={() => onStickerChange(face, index, selectedColor)}
-            className="focus-ring aspect-square min-h-7 rounded border border-slate-400 shadow-inner transition-transform hover:scale-105"
+            className="focus-ring aspect-square min-h-6 rounded border border-slate-400 shadow-inner transition-transform hover:scale-105"
             style={{ backgroundColor: COLOR_HEX[sticker.color] }}
           />
         ))}

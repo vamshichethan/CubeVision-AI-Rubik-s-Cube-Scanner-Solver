@@ -135,7 +135,7 @@ export default function App() {
           onNavigate={setCurrentPage}
         />
       ) : currentPage === 'workspace' ? (
-        <main className="mx-auto grid min-h-[calc(100vh-89px)] max-w-[1800px] grid-cols-1 gap-4 p-4 xl:grid-cols-[320px_minmax(560px,1fr)_340px]">
+        <main className="mx-auto grid min-h-[calc(100vh-89px)] max-w-[1900px] grid-cols-1 gap-4 p-4 xl:grid-cols-[300px_minmax(520px,1fr)_300px]">
           <div className="xl:sticky xl:top-24 xl:self-start">
             <ManualInputPanel
               cubeState={cubeState}
@@ -147,7 +147,7 @@ export default function App() {
             />
           </div>
 
-          <div className="flex min-h-[500px] flex-col gap-4">
+          <div className="flex min-h-[560px] flex-col gap-4">
             <div className="xl:sticky xl:top-24 xl:z-10">
               <CubeScene
                 cubeState={cubeState}

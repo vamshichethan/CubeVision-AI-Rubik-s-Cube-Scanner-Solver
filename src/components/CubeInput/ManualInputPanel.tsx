@@ -34,8 +34,8 @@ export function ManualInputPanel({
   const counts = validateCube(cubeState).counts;
 
   return (
-    <aside className="panel flex max-h-[calc(100vh-104px)] min-h-0 flex-col rounded-lg p-3">
-      <div className="mb-3 flex items-center justify-between gap-3">
+    <aside className="panel flex max-h-[calc(100vh-116px)] min-h-0 flex-col rounded-lg p-3">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold text-slate-950">Manual Input</h2>
           <p className="text-xs text-slate-600">Paint stickers and validate counts.</p>
@@ -52,7 +52,7 @@ export function ManualInputPanel({
 
       <ColorPicker selectedColor={selectedColor} onSelectColor={onSelectedColorChange} />
 
-      <div className="mt-3 grid grid-cols-2 gap-2 overflow-auto pr-1">
+      <div className="mt-3 grid grid-cols-2 gap-2 overflow-auto pr-1 xl:grid-cols-3">
         {FACE_ORDER.map((face) => (
           <FaceGrid
             key={face}
@@ -64,7 +64,7 @@ export function ManualInputPanel({
         ))}
       </div>
 
-      <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-2.5">
+      <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-2">
         <div className="mb-2 grid grid-cols-2 gap-1.5 text-xs 2xl:grid-cols-3">
           {COLORS.map((color) => (
             <div key={color} className="flex items-center justify-between rounded bg-white px-2 py-0.5">

@@ -84,7 +84,7 @@ export function RubiksCube({ cubeState, animation, onAnimationComplete }: Props)
     : cubies;
 
   return (
-    <group rotation={[-0.42, 0.64, 0]}>
+    <group rotation={[-0.42, 0.64, 0]} scale={1.04}>
       {staticCubies.map((cubie) => (
         <Cubie key={`${cubie.position.x}-${cubie.position.y}-${cubie.position.z}`} {...cubie} />
       ))}
