@@ -1,0 +1,168 @@
+import {
+  ArrowRight,
+  BarChart3,
+  Camera,
+  CheckCircle2,
+  Cuboid,
+  PlayCircle,
+  ScanLine,
+  ShieldAlert,
+  Sparkles
+} from 'lucide-react';
+import type { AppPage } from '../components/Layout/Navbar';
+
+type Props = {
+  validationValid: boolean;
+  moveCount: number;
+  solverMessage: string;
+  onNavigate: (page: AppPage) => void;
+};
+
+const workflows: Array<{
+  title: string;
+  description: string;
+  page: AppPage;
+  icon: typeof Cuboid;
+  action: string;
+}> = [
+  {
+    title: 'Solve Workspace',
+    description: 'Edit the cube, inspect the 3D model, validate state, and step through a solution.',
+    page: 'workspace',
+    icon: Cuboid,
+    action: 'Open solver'
+  },
+  {
+    title: 'Camera Input',
+    description: 'Scan six faces with live camera or image upload, then correct low-confidence stickers.',
+    page: 'scanner',
+    icon: Camera,
+    action: 'Scan cube'
+  },
+  {
+    title: 'Benchmark Lab',
+    description: 'Compare BFS, IDDFS, A*, IDA*, and Kociemba-style runners on the same scramble.',
+    page: 'benchmarks',
+    icon: BarChart3,
+    action: 'View metrics'
+  },
+  {
+    title: 'Recovery Coach',
+    description: 'Verify real-world moves, detect mismatches, and recalculate the remaining sequence.',
+    page: 'recovery',
+    icon: ShieldAlert,
+    action: 'Check moves'
+  }
+];
+
+export function HomePage({ validationValid, moveCount, solverMessage, onNavigate }: Props) {
+  return (
+    <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1800px] p-4">
+      <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="panel overflow-hidden rounded-lg">
+          <div className="grid min-h-[380px] gap-6 p-6 lg:grid-cols-[1fr_260px] lg:p-8">
+            <div className="flex flex-col justify-between gap-6">
+              <div>
+                <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800">
+                  <Sparkles className="h-4 w-4" />
+                  CubeVision AI command center
+                </div>
+                <h2 className="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 md:text-5xl">
+                  Scan, solve, verify, and benchmark one cube workflow.
+                </h2>
+                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+                  The app is now organized around the real tasks: capture cube input, solve in 3D,
+                  recover from mistakes, and compare solver engines.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('scanner')}
+                  className="focus-ring inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  <ScanLine className="h-4 w-4" />
+                  Start scanning
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('workspace')}
+                  className="focus-ring inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  Open solver
+                </button>
+              </div>
+            </div>
+
+            <div className="grid content-end gap-3">
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-2 text-sm font-semibold text-slate-500">Cube State</div>
+                <div className={validationValid ? 'text-2xl font-bold text-emerald-700' : 'text-2xl font-bold text-amber-700'}>
+                  {validationValid ? 'Valid' : 'Needs review'}
+                </div>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-2 text-sm font-semibold text-slate-500">Loaded Moves</div>
+                <div className="text-2xl font-bold text-slate-950">{moveCount}</div>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-2 text-sm font-semibold text-slate-500">Solver Status</div>
+                <p className="text-sm leading-6 text-slate-700">{solverMessage}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="panel rounded-lg p-5">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="rounded-md bg-emerald-100 p-2 text-emerald-700">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
+            </div>
+            <ol className="space-y-2 text-sm text-slate-700">
+              <li>1. Scan or upload six faces.</li>
+              <li>2. Correct highlighted stickers.</li>
+              <li>3. Send CubeState to the solver.</li>
+              <li>4. Animate and verify each move.</li>
+            </ol>
+          </div>
+          <div className="panel rounded-lg p-5">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="rounded-md bg-slate-900 p-2 text-white">
+                <BarChart3 className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-950">Resume-Ready Modules</h3>
+            </div>
+            <p className="text-sm leading-6 text-slate-700">
+              Each page maps to a clean subsystem: input, visualization, solving, recovery, and benchmarks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {workflows.map(({ title, description, page, icon: Icon, action }) => (
+          <button
+            key={title}
+            type="button"
+            onClick={() => onNavigate(page)}
+            className="panel focus-ring group rounded-lg p-5 text-left transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <div className="rounded-md bg-slate-100 p-2 text-slate-800 group-hover:bg-blue-100 group-hover:text-blue-700">
+                <Icon className="h-5 w-5" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-700" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-950">{title}</h3>
+            <p className="mt-2 min-h-[72px] text-sm leading-6 text-slate-600">{description}</p>
+            <div className="mt-4 text-sm font-semibold text-blue-700">{action}</div>
+          </button>
+        ))}
+      </section>
+    </main>
+  );
+}

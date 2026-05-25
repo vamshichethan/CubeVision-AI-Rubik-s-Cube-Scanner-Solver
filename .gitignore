@@ -1,0 +1,10 @@
+cubevision
+*.o
+*.out
+build/
+node_modules/
+dist/
+*.tsbuildinfo
+__pycache__/
+*.pyc
+.venv/

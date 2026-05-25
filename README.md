@@ -1,304 +1,261 @@
-<div align="center">
+# CubeVision AI - Input System + Real-Time Recovery
 
-# 🧩 CubeVision AI
+CubeVision AI now uses a page-based interface instead of one long page. The app has a focused Cube Assistant, a dedicated Scanner page, and a Benchmark Dashboard.
 
-### Rubik's Cube Scanner, Solver & 3D Step Visualizer
+The input system supports:
 
-**Camera scanner + OpenCV color detection + cube-state validation + heuristic solving engine + interactive 3D playback**
+- Live webcam/mobile camera capture
+- Cube face image upload
+- OpenCV/FastAPI scanner integration
+- Confidence scores for every sticker
+- Manual sticker correction fallback
+- Six-face scan progress
+- Validation before sending CubeState to the solver
 
-![Computer Vision](https://img.shields.io/badge/Vision-OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
-![Solver](https://img.shields.io/badge/Solver-IDA*_/_Kociemba-FF6F00?style=for-the-badge&logo=codeforces&logoColor=white)
-![Frontend](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![3D](https://img.shields.io/badge/3D-Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)
-![Core](https://img.shields.io/badge/Core-C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)
-![WASM](https://img.shields.io/badge/Runtime-WebAssembly-654FF0?style=for-the-badge&logo=webassembly&logoColor=white)
+The solution player no longer loads a fake hardcoded 10-move solution for arbitrary states. If a real solver is not connected, it shows a safe message instead of playing wrong moves.
 
-![Status](https://img.shields.io/badge/Status-Production--Ready-success?style=flat-square)
-![Difficulty](https://img.shields.io/badge/Difficulty-Hard-red?style=flat-square)
-![Domain](https://img.shields.io/badge/Domain-Computer_Vision_+_Algorithms-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-
-**CubeVision AI turns a physical Rubik's Cube into a validated digital state, computes optimized moves, and teaches the solution through a smooth 3D visualizer.**
-
-[Core Idea](#-core-idea) •
-[Project Phases](#-project-phases) •
-[Features](#-features) •
-[Tech Stack](#-tech-stack) •
-[Architecture](#-system-architecture) •
-[OOP Design](#-oop-design) •
-[Run Locally](#-run-locally)
-
-</div>
-
----
-
-## 🎯 Core Idea
-
-CubeVision AI is more than a solver. It is a complete vision-to-solution system:
+## Pages
 
 ```text
-Camera Scan
-   ↓
-OpenCV Face Detection
-   ↓
-HSV Color Classification
-   ↓
-Cube State Builder
-   ↓
-Validity Checker
-   ↓
-IDA* / Kociemba Solver
-   ↓
-Move Sequence Generator
-   ↓
-Three.js Step Visualizer
+Cube Assistant
+Scanner
+Benchmarks
 ```
 
-The user scans all six faces of a Rubik's Cube. The app detects sticker colors, validates whether the cube is physically solvable, generates an optimized solution, and animates every move in 3D.
+## Scanner UI Flow
 
----
+1. Choose face: `U / D / F / B / L / R`
+2. Use Live Camera or Upload Image
+3. Backend processes the image through OpenCV
+4. App displays detected 3x3 grid
+5. Low-confidence stickers are highlighted
+6. User clicks any sticker to manually correct it
+7. Save the face
+8. Repeat until all 6 faces are scanned
+9. Validate cube state
+10. Send CubeState to solver
 
-## 🗓 Project Phases
+## Problem Solved
 
-| Phase | Focus |
-| --- | --- |
-| Phase 1 | Manual cube input, cube model, move notation, and basic validation ✅ |
-| Phase 2 | Scanner workflow, HSV color calibration helpers, and 3x3 sticker capture ✅ |
-| Phase 3 | Solver workflow with inverse-history solving and bounded IDDFS fallback ✅ |
-| Phase 4 | Step visualizer with next, previous, play, and reset controls ✅ |
-| Phase 5 | Benchmark dashboard and Learn Mode explanations ✅ |
+In real cube solving, the solver can say `U'`, but the user might do `U`, skip a move, rotate the wrong layer, or accidentally perform a double turn. If the app blindly continues, the remaining solution becomes wrong. Phase 7 adds verification before continuing.
 
----
-
-## ✨ Features
-
-### 1. 📷 Camera-Based Cube Scanner
-
-| Capability | Details |
-| --- | --- |
-| Face capture | Scan each of the six cube faces using a webcam or mobile camera |
-| Sticker detection | Detect the 3x3 sticker grid for every face |
-| Piece mapping | Identify centers, edges, and corners from scanned faces |
-| Guided flow | Show scan progress and prevent missing or duplicated faces |
-
-### 2. 🎨 OpenCV Color Detection
-
-| Color | Detection Strategy |
-| --- | --- |
-| White | Brightness and low-saturation HSV range |
-| Yellow | Hue-range thresholding with lighting correction |
-| Red | Dual hue-range handling for HSV wrap-around |
-| Orange | Hue and saturation threshold separation from red |
-| Blue | Stable hue threshold with shadow tolerance |
-| Green | Hue thresholding with saturation normalization |
-
-CubeVision AI supports calibration because real lighting is unpredictable. Users can sample center colors once, then the classifier adapts HSV thresholds for the current environment.
-
-### 3. ✅ Cube State Validator
-
-Before solving, the validator checks whether the scanned cube state is legal.
-
-| Validation Check | Why It Matters |
-| --- | --- |
-| Sticker count | Ensures each color appears exactly nine times |
-| Center uniqueness | Confirms all six face centers are distinct |
-| Edge legality | Rejects duplicated, missing, or impossible edge pieces |
-| Corner legality | Rejects impossible corner positions and orientations |
-| Solvability | Detects states that cannot exist on a real cube |
-
-### 4. 🧠 Optimized Solver Engine
-
-The solving engine is designed around graph search, state compression, and heuristics.
-
-| Mode | Algorithm |
-| --- | --- |
-| Guided | Layer-by-layer beginner method |
-| Optimized | Kociemba two-phase style search |
-| Advanced | IDA* with admissible heuristic tables |
-
-Recommended production path: use a C++ OOP solver compiled to WebAssembly so the browser UI stays fast while search-heavy logic remains efficient.
-
-### 5. 🪄 Step-by-Step Move Generator
-
-CubeVision AI outputs standard cube notation:
+## Flow
 
 ```text
-R U R' U'
-F R U R' U' F'
+Expected move generated
+User performs physical move
+Camera scans cube
+System compares expected state vs scanned state
+Mismatch detected
+Likely wrong move inferred
+Recovery suggested or solution recalculated
+Solving continues
 ```
 
-For each step, the app can show:
-
-| Output | Example |
-| --- | --- |
-| Current phase | Cross, F2L, OLL, PLL, or phase-1/phase-2 search |
-| Move goal | Pair an edge, orient corners, reduce state group, etc. |
-| Remaining moves | Count down through the generated solution |
-| Explanation | Human-readable reason for the next move |
-
-### 6. 🧊 3D Cube Visualizer
-
-The visualizer makes the solution easy to demo and easy to follow.
-
-| Control | Behavior |
-| --- | --- |
-| Rotate | Inspect the cube from any angle |
-| Next / Previous | Step through the solution one move at a time |
-| Play | Animate the full solution automatically |
-| Reset | Return to the scanned starting state |
-| Highlight | Emphasize the face or layer affected by each move |
-
-### 7. 📊 Algorithm Benchmarking Dashboard
-
-Compare solver strategies with measurable output.
-
-| Algorithm | Metrics |
-| --- | --- |
-| BFS | Baseline search depth and memory growth |
-| IDDFS | Iterative deepening behavior |
-| A* | Heuristic quality and node expansion |
-| IDA* | Memory-efficient heuristic search |
-| Kociemba | Solution length and runtime efficiency |
-
-Dashboard metrics include solution length, time taken, memory used, and nodes explored.
-
-### 8. 🧩 Manual Cube Input Fallback
-
-When camera detection struggles, users can manually fill sticker colors on a 2D cube net. This keeps the app usable in poor lighting, low-resolution cameras, or unusual cube sticker designs.
-
-### 9. 🔁 Mistake Detection
-
-After the user performs moves physically, the app can scan the cube again and compare the observed state against the expected state.
+## Backend Modules
 
 ```text
-Expected move: U'
-Detected state: U
-
-Action: warn the user and offer to recalculate from the current state.
+backend/mistake_detection/
+  mistake_detector.py
+  state_comparator.py
+  move_inference_engine.py
+  recovery_manager.py
+  solution_recalculator.py
+  scan_consistency_checker.py
+  expected_state_tracker.py
+  api.py
 ```
 
-### 10. 🎓 Learn Mode
-
-Learn Mode explains why the solution works.
-
-| Topic | Explanation |
-| --- | --- |
-| Cross | Build the first-layer edge structure |
-| F2L | Pair corners and edges efficiently |
-| OLL | Orient the last-layer stickers |
-| PLL | Permute the final pieces |
-| Search | Show how heuristic pruning reduces the search space |
-
----
-
-## 🛠 Tech Stack
-
-| Layer | Recommended Tools |
-| --- | --- |
-| Frontend | React, TypeScript, Vite |
-| 3D Visualizer | Three.js, React Three Fiber |
-| Vision | OpenCV, HSV thresholding, contour detection |
-| Solver Core | C++, OOP, IDA*, Kociemba-style search |
-| Browser Runtime | WebAssembly |
-| API Option | FastAPI, Flask, or Node.js |
-| Prototype Option | Python + OpenCV |
-| Desktop Option | C++ + Qt + OpenCV |
-
-Best production architecture:
+Scanner backend:
 
 ```text
-React + Three.js frontend
-C++ solver compiled to WebAssembly
-OpenCV-powered scanner
-Benchmark dashboard for algorithm comparison
+scanner/
+  api.py
+  camera_scanner.py
+  image_processor.py
+  face_detector.py
+  sticker_extractor.py
+  color_classifier.py
+  confidence_scorer.py
+  calibration_manager.py
+  requirements.txt
 ```
 
----
+## Scanner API
 
-## 🏗 System Architecture
-
-```mermaid
-flowchart TD
-    A[Camera Input] --> B[OpenCV Face Detection]
-    B --> C[Color Classification]
-    C --> D[Cube State Builder]
-    D --> E[State Validator]
-    E --> F[Solver Engine]
-    F --> G[Move Sequence Generator]
-    G --> H[3D Visualizer]
-    F --> I[Benchmark Dashboard]
-    E --> J[Manual Correction UI]
-    J --> D
+```http
+POST /scan-image
 ```
 
----
+Input:
 
-## 🧱 OOP Design
+```text
+image file
+face label
+```
 
-| Class | Responsibility |
-| --- | --- |
-| `Cube` | Stores the full cube state and applies moves |
-| `Face` | Represents one cube face and its nine stickers |
-| `Sticker` | Stores color and position metadata |
-| `Move` | Encodes standard notation and layer rotation |
-| `Scanner` | Captures frames and extracts face grids |
-| `ColorClassifier` | Converts sampled pixels into cube colors |
-| `Validator` | Checks color counts, piece legality, and solvability |
-| `Solver` | Generates optimized solution sequences |
-| `Heuristic` | Provides pruning and search guidance |
-| `Visualizer` | Animates cube state transitions |
-| `Benchmark` | Measures algorithms by speed, memory, and solution length |
+Output:
 
----
+```json
+{
+  "face": "U",
+  "success": true,
+  "stickers": [
+    { "row": 0, "col": 0, "color": "WHITE", "confidence": 0.94 }
+  ],
+  "needsManualCorrection": false
+}
+```
 
-## 🚀 Run Locally
+```http
+POST /validate-cube
+```
+
+Validates all scanned faces for color counts and center uniqueness.
+
+Responsibilities:
+
+- `ExpectedStateTracker`: tracks expected cube state, move history, and remaining solution.
+- `StateComparator`: counts sticker matches and mismatch severity.
+- `MoveInferenceEngine`: applies candidate moves to the previous verified state and picks the closest match.
+- `ScanConsistencyChecker`: rejects noisy or low-confidence scans.
+- `RecoveryManager`: suggests undo, retake, manual correction, or recalculation.
+- `SolutionRecalculator`: scaffold for calling C++/WASM/backend solver.
+- `MistakeDetector`: orchestrates the complete verification flow.
+
+## Frontend Components
+
+```text
+src/components/MistakeDetection/
+  MistakeAlert.tsx
+  RecoveryPanel.tsx
+  ScanVerificationPanel.tsx
+  MoveComparisonCard.tsx
+  ConfidenceIndicator.tsx
+```
+
+The dashboard includes a demo-friendly verification panel:
+
+- Select expected move
+- Simulate correct move, wrong move, or low-confidence scan
+- Verify scanned state
+- Show expected vs detected move
+- Show confidence and mismatch count
+- Suggest recovery
+- Recalculate a mock updated solution and send it to the move timeline
+
+## State Comparison Strategy
+
+The comparator checks every sticker in the expected cube state against the scanned actual state. It returns:
+
+- Exact match
+- Partial match
+- Large mismatch
+- Sticker match percentage
+- Mismatched sticker count
+
+This is intentionally modular so later versions can compare cubie positions and orientations instead of only stickers.
+
+## Move Inference Logic
+
+The inference engine tries nearby candidate moves:
+
+```text
+R, R', L, L', U, U', D, D', F, F', B, B'
+```
+
+For each candidate:
+
+1. Apply the candidate to the previous verified state.
+2. Compare that candidate state to the scanned state.
+3. Choose the candidate with the highest match percentage.
+
+Example:
+
+```text
+Expected Move: U'
+Detected Move: U
+Confidence: 92%
+Suggested Action: Undo Move
+```
+
+## Dynamic Re-Solving
+
+If the state no longer matches the expected path, the recovery system can:
+
+- Undo the inferred mistake
+- Retake the scan
+- Manually correct low-confidence stickers
+- Recalculate a new solution from the scanned state
+
+The current recalculator is a scaffold. Future versions will call the C++ solver through WebAssembly or a backend service.
+
+## Handling Noisy CV Scans
+
+The scan consistency checker uses confidence values from the scanner. Low confidence scans do not trigger aggressive recovery. Instead, the UI asks for retake or manual correction to avoid compounding scanner noise into solver mistakes.
+
+## API Shape
+
+```http
+POST /verify-move
+```
+
+Input:
+
+```json
+{
+  "previousState": {},
+  "expectedState": {},
+  "actualState": {},
+  "expectedMove": "U'",
+  "scanConfidences": [0.93, 0.91]
+}
+```
+
+Output:
+
+```json
+{
+  "match": false,
+  "detected_move": "U",
+  "confidence": 0.92,
+  "recovery_options": ["Undo move", "Recalculate solution"]
+}
+```
+
+## Build And Verify
+
+Frontend:
 
 ```bash
-git clone https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver.git
-cd CubeVision-AI-Rubik-s-Cube-Scanner-Solver
 npm install
-npm start
+npm run build
+npm run dev
 ```
 
-Open the local app:
-
-```text
-http://localhost:5173
-```
-
-For a C++ / WebAssembly solver module:
+Backend syntax check:
 
 ```bash
-emcmake cmake -S solver -B build
-cmake --build build
+python3 -m compileall backend/mistake_detection
 ```
 
----
+Optional API:
 
-## 🧪 Verification Checklist
+```bash
+uvicorn backend.mistake_detection.api:app --reload --port 8001
+uvicorn scanner.api:app --reload --port 8000
+```
 
-- Scan all six faces without duplicate center colors.
-- Confirm each detected color appears exactly nine times.
-- Validate edge and corner legality before solving.
-- Generate move notation and apply it to an internal cube state.
-- Animate every move in the 3D visualizer.
-- Compare BFS, IDDFS, A*, IDA*, and Kociemba-style search metrics.
-- Re-scan after physical moves to detect user mistakes.
+## Future Upgrades
 
----
+- Voice guidance: “You performed the wrong move”
+- Hand tracking
+- Gesture-based move recognition
+- ML-based move inference
+- AR overlay guidance
+- Cubie-level mismatch analysis
+- WebAssembly recovery solving
 
-## ⭐ Project Strength
+## Interview Explanation
 
-CubeVision AI demonstrates computer vision, graph algorithms, heuristic search, C++ OOP, optimization, system design, visual simulation, and real-world error handling in one cohesive product.
-
-It is a strong SDE project because it invites deep technical discussion around state representation, BFS vs A*, admissible heuristics, OpenCV preprocessing, search pruning, WebAssembly performance, and UX recovery paths when camera input fails.
-
----
-
-<div align="center">
-
-### 🧩 CubeVision AI
-
-**Scan the cube. Validate the state. Solve it. Watch every move.**
-
-</div>
+Phase 7 demonstrates real-world robustness. It separates scanner confidence, state comparison, move inference, recovery planning, and re-solving. That makes the system explainable, testable, and ready for future ML or WebAssembly upgrades without tangling UI, CV, and solver logic.

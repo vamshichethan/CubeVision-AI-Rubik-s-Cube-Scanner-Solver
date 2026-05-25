@@ -1,18 +1,31 @@
 {
   "name": "cubevision-ai",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Phase 1 manual Rubik's Cube input, validation, and move engine for CubeVision AI.",
   "type": "module",
   "scripts": {
-    "start": "python3 -m http.server 5173",
-    "test": "node tests/cube.test.js"
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0"
   },
-  "keywords": [
-    "rubiks-cube",
-    "computer-vision",
-    "solver",
-    "cube"
-  ],
-  "license": "MIT"
+  "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.17.10",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^3.8.1",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.171.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
 }
