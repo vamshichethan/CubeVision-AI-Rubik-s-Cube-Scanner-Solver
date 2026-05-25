@@ -24,6 +24,8 @@ const scanGrid = document.querySelector("#scanGrid");
 const scannerHint = document.querySelector("#scannerHint");
 const stepCard = document.querySelector("#stepCard");
 const benchmarkTable = document.querySelector("#benchmarkTable");
+const navItems = document.querySelectorAll(".nav-item");
+const pagePanels = document.querySelectorAll("[data-page-panel]");
 
 renderPalette();
 renderScanner();
@@ -32,6 +34,14 @@ renderValidation();
 renderSolution();
 renderBenchmarks();
 window.requestAnimationFrame(animateVisualCube);
+
+navItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    const page = item.dataset.page;
+    navItems.forEach((navItem) => navItem.classList.toggle("is-active", navItem === item));
+    pagePanels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.pagePanel === page));
+  });
+});
 
 document.querySelector("#validateBtn").addEventListener("click", renderValidation);
 document.querySelector("#resetBtn").addEventListener("click", () => {
