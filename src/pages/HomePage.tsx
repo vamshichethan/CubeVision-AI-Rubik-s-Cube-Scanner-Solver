@@ -114,51 +114,45 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
           </div>
         </div>
 
-        <div className="grid gap-4">
-          <div className="panel rounded-lg p-6">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="rounded-md bg-emerald-100 p-2 text-emerald-700">
-                <CheckCircle2 className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
-                <p className="text-sm text-slate-600">A clean path through the app.</p>
-              </div>
+        <div className="panel rounded-lg p-6">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="rounded-md bg-emerald-100 p-2 text-emerald-700">
+              <CheckCircle2 className="h-5 w-5" />
             </div>
-            <ol className="grid gap-2 text-sm text-slate-700">
-              {[
-                'Scan or upload six faces',
-                'Correct highlighted stickers',
-                'Send CubeState to the solver',
-                'Animate and verify each move'
-              ].map((step, index) => (
-                <li key={step} className="flex items-center gap-3 rounded-md bg-slate-50 px-3 py-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-xs font-bold text-blue-700 shadow-sm">
-                    {index + 1}
-                  </span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
+            <div>
+              <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
+              <p className="text-sm text-slate-600">A clean path through the app.</p>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <ol className="grid gap-2 text-sm text-slate-700">
+            {[
+              'Scan or upload six faces',
+              'Correct highlighted stickers',
+              'Send CubeState to the solver',
+              'Animate and verify each move'
+            ].map((step, index) => (
+              <li key={step} className="flex items-center gap-3 rounded-md bg-slate-50 px-3 py-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-xs font-bold text-blue-700 shadow-sm">
+                  {index + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
             <button
               type="button"
-              onClick={() => onNavigate('recovery')}
-              className="panel focus-ring rounded-lg p-4 text-left hover:border-amber-300"
+              onClick={() => onNavigate('scanner')}
+              className="focus-ring rounded-md bg-slate-950 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
             >
-              <ShieldAlert className="mb-3 h-5 w-5 text-amber-700" />
-              <div className="text-sm font-bold text-slate-950">Mistake recovery</div>
-              <div className="mt-1 text-xs leading-5 text-slate-600">Check a physical move before continuing.</div>
+              Start with scanner
             </button>
             <button
               type="button"
-              onClick={() => onNavigate('benchmarks')}
-              className="panel focus-ring rounded-lg p-4 text-left hover:border-blue-300"
+              onClick={() => onNavigate('workspace')}
+              className="focus-ring rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
             >
-              <BarChart3 className="mb-3 h-5 w-5 text-blue-700" />
-              <div className="text-sm font-bold text-slate-950">Benchmark lab</div>
-              <div className="mt-1 text-xs leading-5 text-slate-600">Compare solver speed and search cost.</div>
+              Open solver
             </button>
           </div>
         </div>
