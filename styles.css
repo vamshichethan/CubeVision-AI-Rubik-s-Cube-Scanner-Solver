@@ -64,7 +64,7 @@ button:focus-visible {
 
 .app-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 390px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 16px;
   min-height: 100vh;
   padding: 16px;
@@ -201,9 +201,9 @@ h2 {
 
 .board-panel {
   display: grid;
-  grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr);
-  align-items: start;
-  gap: 22px;
+  grid-template-columns: minmax(520px, 1fr) 320px;
+  align-items: stretch;
+  gap: 18px;
   flex: 1;
   min-height: 0;
   padding: 18px;
@@ -212,8 +212,8 @@ h2 {
 .visual-stage {
   position: relative;
   display: grid;
-  align-content: start;
-  min-height: 430px;
+  align-content: space-between;
+  min-height: 560px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
@@ -221,8 +221,8 @@ h2 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 40%),
     linear-gradient(145deg, rgba(36, 119, 255, 0.2), rgba(255, 138, 42, 0.12)),
     #10161f;
-  padding: 24px;
-  perspective: 900px;
+  padding: 28px;
+  perspective: 1100px;
 }
 
 .visual-stage::after {
@@ -241,9 +241,9 @@ h2 {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 38px;
-  width: 190px;
-  height: 44px;
+  bottom: 54px;
+  width: 300px;
+  height: 58px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(0, 0, 0, 0.42), transparent 68%);
   filter: blur(3px);
@@ -257,20 +257,22 @@ h2 {
 }
 
 .stage-copy h2 {
-  max-width: 390px;
+  max-width: 520px;
   margin: 0 0 10px;
-  font-size: clamp(1.8rem, 3vw, 2.65rem);
+  font-size: clamp(2.3rem, 4vw, 4.2rem);
   line-height: 1;
 }
 
 .cube-preview {
+  --cube-size: clamp(240px, 23vw, 330px);
+  --cube-depth: calc(var(--cube-size) / 2);
   position: relative;
   z-index: 1;
-  width: 180px;
-  height: 180px;
+  width: var(--cube-size);
+  height: var(--cube-size);
   justify-self: center;
   align-self: center;
-  margin: 52px 0 28px;
+  margin: 34px 0 64px;
   transform-style: preserve-3d;
   cursor: grab;
   touch-action: none;
@@ -287,8 +289,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  width: 180px;
-  height: 180px;
+  width: var(--cube-size);
+  height: var(--cube-size);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   background: #070a0f;
@@ -303,32 +305,40 @@ h2 {
 }
 
 .preview-front {
-  transform: translateZ(90px);
+  transform: translateZ(var(--cube-depth));
 }
 
 .preview-back {
   filter: brightness(0.72);
-  transform: rotateY(180deg) translateZ(90px);
+  transform: rotateY(180deg) translateZ(var(--cube-depth));
 }
 
 .preview-right {
   filter: brightness(0.92);
-  transform: rotateY(90deg) translateZ(90px);
+  transform: rotateY(90deg) translateZ(var(--cube-depth));
 }
 
 .preview-left {
   filter: brightness(0.82);
-  transform: rotateY(-90deg) translateZ(90px);
+  transform: rotateY(-90deg) translateZ(var(--cube-depth));
 }
 
 .preview-top {
   filter: brightness(1.08);
-  transform: rotateX(90deg) translateZ(90px);
+  transform: rotateX(90deg) translateZ(var(--cube-depth));
 }
 
 .preview-bottom {
   filter: brightness(0.78);
-  transform: rotateX(-90deg) translateZ(90px);
+  transform: rotateX(-90deg) translateZ(var(--cube-depth));
+}
+
+.manual-panel {
+  align-self: start;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(12, 17, 24, 0.7);
+  padding: 14px;
 }
 
 .section-title-row {
@@ -353,20 +363,21 @@ h2 {
 
 .cube-net {
   display: grid;
-  grid-template-columns: repeat(4, minmax(74px, 1fr));
-  grid-template-rows: repeat(3, minmax(74px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(4, 68px);
+  grid-template-rows: repeat(3, 68px);
+  justify-content: center;
+  gap: 8px;
 }
 
 .face {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 24px repeat(3, 1fr);
-  gap: 5px;
+  grid-template-rows: 18px repeat(3, 1fr);
+  gap: 4px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   background: #0a0e14;
-  padding: 7px;
+  padding: 5px;
   aspect-ratio: 1;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
 }
@@ -374,7 +385,7 @@ h2 {
 .face-title {
   grid-column: 1 / -1;
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 900;
   text-align: center;
 }
@@ -412,7 +423,7 @@ h2 {
 .sticker {
   min-width: 0;
   border: 1px solid rgba(0, 0, 0, 0.42);
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 0;
   box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.16);
 }
@@ -556,7 +567,12 @@ input:focus {
   }
 
   .visual-stage {
-    min-height: 500px;
+    min-height: 520px;
+  }
+
+  .manual-panel {
+    justify-self: center;
+    width: min(100%, 360px);
   }
 }
 
@@ -574,8 +590,27 @@ input:focus {
     grid-template-columns: 1fr;
   }
 
+  .board-panel {
+    padding: 12px;
+  }
+
+  .visual-stage {
+    min-height: 460px;
+    padding: 18px;
+  }
+
+  .stage-copy h2 {
+    font-size: 2rem;
+  }
+
+  .cube-preview {
+    --cube-size: min(220px, 62vw);
+    margin: 46px 0 48px;
+  }
+
   .cube-net {
-    grid-template-columns: repeat(3, minmax(82px, 1fr));
+    grid-template-columns: repeat(3, 58px);
+    grid-template-rows: repeat(4, 58px);
   }
 
   .face[data-face="U"],
