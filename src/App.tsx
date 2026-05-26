@@ -83,13 +83,14 @@ export default function App() {
         setSolverMessage(`Loaded ${solution.length} verified inverse history moves.`);
         return;
       }
-      const solution = await solveCube(cubeState);
+      const result = await solveCube(cubeState);
+      const solution = result.moves;
       setMoves(solution);
       setCurrentIndex(0);
       setSolverMessage(
-        solution.length > 0
+        result.success && solution.length > 0
           ? `Loaded ${solution.length} solver moves.`
-          : 'No arbitrary-state solver is connected yet, so no fake moves were loaded.'
+          : result.message
       );
     } finally {
       setIsSolving(false);
