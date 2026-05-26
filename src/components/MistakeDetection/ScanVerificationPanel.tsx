@@ -117,8 +117,13 @@ export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, o
         <p className="mt-2 text-xs leading-5 text-slate-600">
           {hasScannerSnapshot
             ? 'Recovery will compare the previous solver state against the latest CubeState sent from Scanner.'
-            : 'No complete scanner CubeState has been sent yet. Use Scanner, save all six faces, then send to solver.'}
+            : 'No complete scanner CubeState has been sent yet. Demo-only manual simulation is available below for walkthroughs.'}
         </p>
+        {!hasScannerSnapshot && (
+          <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800">
+            Demo-only mode: this uses generated state changes, not camera scanner output.
+          </div>
+        )}
       </div>
 
       <div className="mb-4 grid gap-3 lg:grid-cols-[220px_1fr]">
@@ -193,7 +198,7 @@ export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, o
             className="focus-ring flex items-center justify-center gap-2 rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
           >
             <ScanSearch className="h-4 w-4" />
-            Verify Move
+            {useScannerOutput && hasScannerSnapshot ? 'Verify Scanner Move' : 'Verify Demo Move'}
           </button>
           <button
             type="button"

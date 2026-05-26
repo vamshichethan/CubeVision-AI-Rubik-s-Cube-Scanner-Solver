@@ -259,17 +259,20 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
               <p className="text-sm text-slate-600">
               {inputMode === 'upload'
                 ? 'Use the upload control on the left, then review confidence scores on the right.'
-                  : 'Manual mode uses a template face so you can enter colors directly without pretending it came from CV.'}
+                  : 'Manual template entry: this starts from a solved face template and is not CV output.'}
               </p>
             </section>
           )}
           {debugMode && (
             <section className="panel rounded-lg p-4 text-sm text-slate-700">
               <h2 className="mb-2 text-lg font-semibold text-slate-950">Debug View</h2>
+              <p className="mb-3 text-xs text-slate-500">
+                Placeholder debug slots until the OpenCV backend returns masks, contours, and crops.
+              </p>
               <div className="grid gap-2 md:grid-cols-3">
-                <div className="rounded bg-slate-50 p-3">Original frame</div>
-                <div className="rounded bg-slate-50 p-3">Detected contours</div>
-                <div className="rounded bg-slate-50 p-3">Sticker crops</div>
+                <div className="rounded bg-slate-50 p-3">Backend debug slot: original frame</div>
+                <div className="rounded bg-slate-50 p-3">Backend debug slot: detected contours</div>
+                <div className="rounded bg-slate-50 p-3">Backend debug slot: sticker crops</div>
               </div>
             </section>
           )}

@@ -120,8 +120,8 @@ export function HomePage({ validationValid, moveCount, solverMessage, onNavigate
               <CheckCircle2 className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-950">Best Demo Flow</h3>
-              <p className="text-sm text-slate-600">A clean path through the app.</p>
+              <h3 className="text-lg font-bold text-slate-950">Recommended Live Flow</h3>
+              <p className="text-sm text-slate-600">Real actions first; demo-only controls are labeled inside each page.</p>
             </div>
           </div>
           <ol className="grid gap-2 text-sm text-slate-700">
