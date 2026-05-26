@@ -5,7 +5,7 @@ import { SolutionControls } from './components/Controls/SolutionControls';
 import { Navbar } from './components/Layout/Navbar';
 import type { AppPage } from './components/Layout/Navbar';
 import { cloneCube, createSolvedCube } from './lib/cubeState';
-import { solveCube } from './lib/mockSolver';
+import { solveCube } from './lib/solverApi';
 import { applyMove, applyMoves, inverseMove, inverseMoves, parseMove } from './lib/moves';
 import { validateCube } from './lib/validators';
 import { BenchmarkDashboard } from './pages/BenchmarkDashboard';
@@ -95,11 +95,7 @@ export default function App() {
       const solution = result.moves;
       setMoves(solution);
       setCurrentIndex(0);
-      setSolverMessage(
-        result.success && solution.length > 0
-          ? `Loaded ${solution.length} solver moves.`
-          : result.message
-      );
+      setSolverMessage(result.message);
     } finally {
       setIsSolving(false);
     }
