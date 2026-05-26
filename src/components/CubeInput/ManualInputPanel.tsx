@@ -76,11 +76,17 @@ export function ManualInputPanel({
           ))}
         </div>
 
-        {validation.errors.length > 0 && (
+        {validation.errors.length > 0 ? (
           <div className="mb-3 rounded-md border border-rose-200 bg-rose-50 p-2 text-xs text-rose-700">
+            <div className="mb-1 font-bold">Validation failed</div>
             {validation.errors.map((error) => (
               <div key={error}>{error}</div>
             ))}
+          </div>
+        ) : (
+          <div className="mb-3 rounded-md border border-emerald-200 bg-emerald-50 p-2 text-xs text-emerald-700">
+            <div className="font-bold">Validation passed</div>
+            <div>Counts, centers, edges, and corners look physically valid.</div>
           </div>
         )}
 

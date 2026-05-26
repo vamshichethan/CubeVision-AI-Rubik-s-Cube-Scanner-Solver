@@ -64,7 +64,13 @@ export default function App() {
   };
 
   const handleValidate = () => {
-    setValidation(validateCube(cubeState));
+    const result = validateCube(cubeState);
+    setValidation(result);
+    setSolverMessage(
+      result.valid
+        ? 'Validation passed: color counts and physical pieces are valid.'
+        : `Validation failed with ${result.errors.length} issue${result.errors.length === 1 ? '' : 's'}.`
+    );
   };
 
   const handleSolve = async () => {
@@ -222,7 +228,7 @@ export default function App() {
             <ManualInputPanel
               cubeState={cubeState}
               selectedColor={selectedColor}
-              validation={validation.valid ? liveValidation : validation}
+              validation={validation}
               onSelectedColorChange={setSelectedColor}
               onCubeChange={handleCubeChange}
               onValidate={handleValidate}
