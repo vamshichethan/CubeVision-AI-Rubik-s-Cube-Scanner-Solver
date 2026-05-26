@@ -1,6 +1,6 @@
 <div align="center">
 
-# CubeVision AI
+# 🧊 CubeVision AI
 
 ### Rubik's Cube Scanner, Solver, Validator, Visualizer, Recovery Coach, and Benchmark Lab
 
@@ -14,6 +14,7 @@
 ![Status](https://img.shields.io/badge/Status-Deployed-success?style=for-the-badge)
 
 **Live App:** [cubevision-ai.vercel.app](https://cubevision-ai.vercel.app)  
+**Latest Deployment:** [cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app](https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app)  
 **Solver API Health:** [cubevision-ai.vercel.app/api/health](https://cubevision-ai.vercel.app/api/health)  
 **Repository:** [GitHub](https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver)
 
@@ -45,6 +46,7 @@ The goal is not just to show a static solver. The app is designed around the rea
 | Service | Link | Purpose |
 |---|---|---|
 | Frontend + Solver API | [https://cubevision-ai.vercel.app](https://cubevision-ai.vercel.app) | React app deployed with Vercel serverless API |
+| Latest Production Deployment | [https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app](https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app) | Direct URL for the latest production build |
 | Health Check | [https://cubevision-ai.vercel.app/api/health](https://cubevision-ai.vercel.app/api/health) | Confirms Kociemba API is online |
 | Solver Endpoint | `POST /api/solve` | Solves a CubeState using the Kociemba path |
 

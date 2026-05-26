@@ -51,20 +51,20 @@ export function SolutionControls({
     <aside className="panel flex max-h-[calc(100vh-116px)] min-h-0 flex-col rounded-lg p-4">
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-950">Solution Player</h2>
-        <p className="text-sm text-slate-600">Generate a scramble, then play the verified inverse solution.</p>
+        <p className="text-sm leading-6 text-slate-600">Generate a scramble, then play the verified inverse solution.</p>
       </div>
 
       <button
         type="button"
         disabled={!canSolve || isSolving || isAnimating}
         onClick={onSolve}
-        className="focus-ring mb-4 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+        className="focus-ring mb-4 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
       >
         <Wand2 className="h-4 w-4" />
         {isSolving ? 'Solving...' : 'Solve'}
       </button>
 
-      <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+      <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50/85 p-3">
         <div className="mb-2 flex items-center justify-between text-sm">
           <span className="text-slate-600">Current move</span>
           <strong className="text-slate-950">
@@ -85,7 +85,7 @@ export function SolutionControls({
           title="Previous move"
           disabled={!hasMoves || currentIndex === 0 || isAnimating || isPlaying}
           onClick={onPrevious}
-          className="focus-ring rounded-md border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          className="focus-ring rounded-md border border-slate-300 bg-white p-2 text-slate-700 shadow-sm hover:bg-slate-100 disabled:opacity-40"
         >
           <SkipBack className="mx-auto h-4 w-4" />
         </button>
@@ -94,7 +94,7 @@ export function SolutionControls({
           title="Next move"
           disabled={!hasMoves || currentIndex >= moves.length || isAnimating}
           onClick={onNext}
-          className="focus-ring rounded-md border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          className="focus-ring rounded-md border border-slate-300 bg-white p-2 text-slate-700 shadow-sm hover:bg-slate-100 disabled:opacity-40"
         >
           <SkipForward className="mx-auto h-4 w-4" />
         </button>
@@ -103,7 +103,7 @@ export function SolutionControls({
           title="Play"
           disabled={!hasMoves || currentIndex >= moves.length || isAnimating || isPlaying}
           onClick={onPlay}
-          className="focus-ring rounded-md border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          className="focus-ring rounded-md border border-slate-300 bg-white p-2 text-slate-700 shadow-sm hover:bg-slate-100 disabled:opacity-40"
         >
           <Play className="mx-auto h-4 w-4" />
         </button>
@@ -112,7 +112,7 @@ export function SolutionControls({
           title="Pause"
           disabled={!isPlaying}
           onClick={onPause}
-          className="focus-ring rounded-md border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          className="focus-ring rounded-md border border-slate-300 bg-white p-2 text-slate-700 shadow-sm hover:bg-slate-100 disabled:opacity-40"
         >
           <Pause className="mx-auto h-4 w-4" />
         </button>
@@ -121,7 +121,7 @@ export function SolutionControls({
           title="Reset playback"
           disabled={!hasMoves || isAnimating}
           onClick={onReset}
-          className="focus-ring rounded-md border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          className="focus-ring rounded-md border border-slate-300 bg-white p-2 text-slate-700 shadow-sm hover:bg-slate-100 disabled:opacity-40"
         >
           <RotateCcw className="mx-auto h-4 w-4" />
         </button>
@@ -139,7 +139,7 @@ export function SolutionControls({
             type="button"
             onClick={onResetSolved}
             disabled={isAnimating}
-            className="focus-ring rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+            className="focus-ring rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40"
           >
             Solved
           </button>
@@ -152,7 +152,7 @@ export function SolutionControls({
               type="button"
               onClick={() => onGenerateScramble(length)}
               disabled={isAnimating}
-              className="focus-ring rounded-md bg-slate-950 px-2 py-2 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-40"
+              className="focus-ring rounded-md bg-slate-950 px-2 py-2 text-xs font-semibold text-white shadow-sm hover:bg-slate-800 disabled:opacity-40"
             >
               {length} moves
             </button>

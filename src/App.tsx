@@ -218,7 +218,7 @@ export default function App() {
   }, [currentIndex, isAnimating, isPlaying, moves.length, startNextMove]);
 
   return (
-    <div className="min-h-screen bg-[#eef2f7]">
+    <div className="min-h-screen">
       <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
       {currentPage === 'home' ? (
         <HomePage
@@ -228,7 +228,7 @@ export default function App() {
           onNavigate={setCurrentPage}
         />
       ) : currentPage === 'workspace' ? (
-        <main className="mx-auto grid min-h-[calc(100vh-89px)] max-w-[1900px] grid-cols-1 gap-4 p-4 xl:grid-cols-[300px_minmax(520px,1fr)_300px]">
+        <main className="mx-auto grid min-h-[calc(100vh-89px)] max-w-[1900px] grid-cols-1 gap-4 p-4 xl:grid-cols-[310px_minmax(520px,1fr)_320px]">
           <div className="xl:sticky xl:top-24 xl:self-start">
             <ManualInputPanel
               cubeState={cubeState}
