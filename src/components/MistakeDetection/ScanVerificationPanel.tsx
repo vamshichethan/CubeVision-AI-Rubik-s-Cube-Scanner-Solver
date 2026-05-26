@@ -2,15 +2,17 @@ import { Activity, CheckCircle2, ScanSearch, Shuffle } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { cloneCube } from '../../lib/cubeState';
 import { makeDemoMistake, verifyMoveStep } from '../../lib/mistakeDetection';
-import { applyMove, moveToString, parseMove } from '../../lib/moves';
-import type { CubeState, Move } from '../../types/cube';
+import { applyMove, inverseMove, moveToString, parseMove } from '../../lib/moves';
+import type { CubeState, Move, MoveFace } from '../../types/cube';
 import type { MistakeDetectionResult } from '../../types/mistakeDetection';
 import { ConfidenceIndicator } from './ConfidenceIndicator';
 import { MistakeAlert } from './MistakeAlert';
 import { MoveComparisonCard } from './MoveComparisonCard';
 import { RecoveryPanel } from './RecoveryPanel';
 
-const DEMO_MOVES = ["U'", 'R', 'F'];
+const MOVE_TOKENS = ['R', "R'", 'L', "L'", 'U', "U'", 'D', "D'", 'F', "F'", 'B', "B'"];
+const ACTUAL_OPTIONS = ['same', ...MOVE_TOKENS, 'low'] as const;
+type ActualOption = (typeof ACTUAL_OPTIONS)[number];
 
 type Props = {
   cubeState: CubeState;
@@ -20,33 +22,51 @@ type Props = {
 export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: Props) {
   const [expectedMoveToken, setExpectedMoveToken] = useState("U'");
   const [result, setResult] = useState<MistakeDetectionResult | null>(null);
-  const [mode, setMode] = useState<'correct' | 'wrong' | 'low'>('wrong');
+  const [actualMoveToken, setActualMoveToken] = useState<ActualOption>('U');
 
   const expectedMove = useMemo(() => parseMove(expectedMoveToken) ?? { face: 'U' as const, prime: true }, [expectedMoveToken]);
 
   const runVerification = () => {
     const previousState = cloneCube(cubeState);
     const expectedState = applyMove(previousState, expectedMove);
-    const actualState =
-      mode === 'correct'
-        ? expectedState
-        : mode === 'low'
-          ? makeDemoMistake(previousState, expectedMove)
-          : makeDemoMistake(previousState, expectedMove);
-    const scanConfidence = mode === 'low' ? 0.62 : 0.93;
+    const actualMove =
+      actualMoveToken === 'same'
+        ? expectedMove
+        : actualMoveToken === 'low'
+          ? expectedMove
+          : parseMove(actualMoveToken) ?? expectedMove;
+    const actualState = actualMoveToken === 'low' ? makeDemoMistake(previousState, expectedMove) : applyMove(previousState, actualMove);
+    const scanConfidence = actualMoveToken === 'low' ? 0.62 : 0.95;
     setResult(verifyMoveStep(previousState, expectedState, actualState, expectedMove, scanConfidence));
   };
 
   const recalculate = () => {
-    const updated = ['R', 'U', "R'", "U'", "F'"].map(parseMove).filter((move): move is Move => Boolean(move));
-    onUseRecalculatedSolution(updated);
+    const detected = result?.detectedMove ? parseMove(result.detectedMove) : null;
+    const correction = detected ? [inverseMove(detected), expectedMove] : [expectedMove];
+    onUseRecalculatedSolution(correction);
     if (result) {
       setResult({
         ...result,
-        message: 'Recalculated optimized solution from scanned state. New remaining moves: 5.',
+        message: `Loaded recovery sequence: ${correction.map(moveToString).join(' ')}.`,
         suggestedAction: 'Continue with updated timeline'
       });
     }
+  };
+
+  const undoDetectedMove = () => {
+    const detected = result?.detectedMove ? parseMove(result.detectedMove) : null;
+    if (!detected) return;
+    const undo = inverseMove(detected);
+    onUseRecalculatedSolution([undo, expectedMove]);
+    setResult((current) =>
+      current
+        ? {
+            ...current,
+            message: `Undo ${moveToString(detected)} with ${moveToString(undo)}, then perform ${moveToString(expectedMove)}.`,
+            suggestedAction: 'Recovery sequence loaded'
+          }
+        : current
+    );
   };
 
   return (
@@ -63,7 +83,7 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
           <label className="mb-2 block text-sm font-medium text-slate-700">Expected move</label>
           <div className="mb-3 grid grid-cols-3 gap-1.5">
-            {DEMO_MOVES.map((move) => (
+            {MOVE_TOKENS.map((move) => (
               <button
                 key={move}
                 type="button"
@@ -78,25 +98,23 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
             ))}
           </div>
 
-          <label className="mb-2 block text-sm font-medium text-slate-700">Scan scenario</label>
-          <div className="grid gap-1.5">
-            {[
-              ['correct', 'Correct move'],
-              ['wrong', 'Wrong direction'],
-              ['low', 'Low-confidence scan']
-            ].map(([value, label]) => (
+          <label className="mb-2 block text-sm font-medium text-slate-700">Actual scanned move</label>
+          <div className="grid grid-cols-3 gap-1.5">
+            {ACTUAL_OPTIONS.map((value) => {
+              const label = value === 'same' ? 'Correct' : value === 'low' ? 'Low scan' : value;
+              return (
               <button
                 key={value}
                 type="button"
-                onClick={() => setMode(value as 'correct' | 'wrong' | 'low')}
+                onClick={() => setActualMoveToken(value)}
                 className={[
-                  'focus-ring rounded-md border px-2 py-1 text-left text-sm',
-                  mode === value ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700'
+                  'focus-ring rounded-md border px-2 py-1 text-center text-sm font-semibold',
+                  actualMoveToken === value ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700'
                 ].join(' ')}
               >
                 {label}
               </button>
-            ))}
+            )})}
           </div>
         </div>
 
@@ -119,7 +137,7 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
       <div className="grid gap-3 lg:grid-cols-[1fr_320px]">
         <RecoveryPanel
           result={result}
-          onUndo={() => setResult(result ? { ...result, message: `Suggested undo: ${result.detectedMove ? moveToString({ ...expectedMove, prime: !expectedMove.prime }) : 'Retake scan first'}.` } : result)}
+          onUndo={undoDetectedMove}
           onRecalculate={recalculate}
         />
         <div className="grid grid-cols-2 gap-2">
@@ -134,7 +152,7 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
           <button
             type="button"
             onClick={() => {
-              setMode('correct');
+              setActualMoveToken('same');
               setResult(null);
             }}
             className="focus-ring flex items-center justify-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
@@ -144,7 +162,11 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
           </button>
           <button
             type="button"
-            onClick={() => setMode('wrong')}
+            onClick={() => {
+              const opposite = expectedMove.prime ? expectedMove.face : `${expectedMove.face}'`;
+              setActualMoveToken(opposite as ActualOption);
+              setResult(null);
+            }}
             className="focus-ring col-span-2 flex items-center justify-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
           >
             <Shuffle className="h-4 w-4" />
