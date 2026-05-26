@@ -11,7 +11,7 @@ export function BenchmarkTable({ results }: Props) {
         <h2 className="text-lg font-semibold text-slate-950">Algorithm Comparison</h2>
       </div>
       <div className="overflow-auto">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="w-full min-w-[960px] text-left text-sm">
           <thead className="bg-slate-50 text-slate-600">
             <tr>
               <th className="px-4 py-3">Algorithm</th>
@@ -21,6 +21,7 @@ export function BenchmarkTable({ results }: Props) {
               <th className="px-4 py-3">Memory Used</th>
               <th className="px-4 py-3">Nodes Explored</th>
               <th className="px-4 py-3">Max Depth</th>
+              <th className="px-4 py-3">Execution Notes</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +38,7 @@ export function BenchmarkTable({ results }: Props) {
                 <td className="px-4 py-3">{result.memoryUsedMB.toFixed(1)} MB</td>
                 <td className="px-4 py-3">{result.nodesExplored.toLocaleString()}</td>
                 <td className="px-4 py-3">{result.maxDepthReached}</td>
+                <td className="max-w-[320px] px-4 py-3 text-xs leading-5 text-slate-600">{result.notes}</td>
               </tr>
             ))}
           </tbody>

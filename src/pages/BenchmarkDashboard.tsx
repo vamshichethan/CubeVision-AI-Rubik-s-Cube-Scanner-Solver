@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlgorithmNotes } from '../components/Benchmark/AlgorithmNotes';
 import { BenchmarkCharts } from '../components/Benchmark/BenchmarkCharts';
 import { BenchmarkTable } from '../components/Benchmark/BenchmarkTable';
 import { ScrambleControlPanel } from '../components/Benchmark/ScrambleControlPanel';
 import { SolutionViewer } from '../components/Benchmark/SolutionViewer';
-import { makeMockBenchmarkReport } from '../lib/benchmarkMockData';
-import { runBenchmark } from '../lib/benchmarkApi';
+import { createPendingBenchmarkReport, runBenchmark } from '../lib/benchmarkApi';
 import type { BenchmarkAlgorithm, BenchmarkDifficulty, BenchmarkReport } from '../types/benchmark';
 
 type Props = {
@@ -17,7 +16,22 @@ export function BenchmarkDashboard({ onSendSolution }: Props) {
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<BenchmarkAlgorithm[]>(['BFS', 'IDDFS', 'A*', 'IDA*', 'Kociemba']);
   const [timeoutMs, setTimeoutMs] = useState(1500);
   const [running, setRunning] = useState(false);
-  const [report, setReport] = useState<BenchmarkReport>(() => makeMockBenchmarkReport('Easy', ['BFS', 'IDDFS', 'A*', 'IDA*', 'Kociemba'], 1500));
+  const [report, setReport] = useState<BenchmarkReport>(() => createPendingBenchmarkReport());
+
+  useEffect(() => {
+    let cancelled = false;
+    setRunning(true);
+    runBenchmark('Easy', ['BFS', 'IDDFS', 'A*', 'IDA*', 'Kociemba'], 1500)
+      .then((nextReport) => {
+        if (!cancelled) setReport(nextReport);
+      })
+      .finally(() => {
+        if (!cancelled) setRunning(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleRun = async () => {
     setRunning(true);
