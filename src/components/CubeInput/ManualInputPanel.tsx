@@ -9,6 +9,7 @@ type Props = {
   cubeState: CubeState;
   selectedColor: CubeColor;
   validation: ValidationResult;
+  validationAttempted: boolean;
   onSelectedColorChange: (color: CubeColor) => void;
   onCubeChange: (cube: CubeState) => void;
   onValidate: () => void;
@@ -18,6 +19,7 @@ export function ManualInputPanel({
   cubeState,
   selectedColor,
   validation,
+  validationAttempted,
   onSelectedColorChange,
   onCubeChange,
   onValidate
@@ -76,7 +78,12 @@ export function ManualInputPanel({
           ))}
         </div>
 
-        {validation.errors.length > 0 ? (
+        {!validationAttempted ? (
+          <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+            <div className="mb-1 font-bold">Not validated yet</div>
+            <div>Press Validate to check counts, centers, edges, and corners before solving.</div>
+          </div>
+        ) : validation.errors.length > 0 ? (
           <div className="mb-3 rounded-md border border-rose-200 bg-rose-50 p-2 text-xs text-rose-700">
             <div className="mb-1 font-bold">Validation failed</div>
             {validation.errors.map((error) => (
@@ -96,7 +103,7 @@ export function ManualInputPanel({
           className="focus-ring flex w-full items-center justify-center gap-2 rounded-md bg-slate-950 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
         >
           <ShieldCheck className="h-4 w-4" />
-          Validate
+          {validationAttempted ? 'Validate Again' : 'Validate Cube'}
         </button>
       </div>
     </aside>

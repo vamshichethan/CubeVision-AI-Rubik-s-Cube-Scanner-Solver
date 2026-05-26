@@ -21,6 +21,7 @@ export default function App() {
   const [cubeState, setCubeState] = useState<CubeState>(() => createSolvedCube());
   const [selectedColor, setSelectedColor] = useState<CubeColor>('white');
   const [validation, setValidation] = useState(() => validateCube(createSolvedCube()));
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const [moves, setMoves] = useState<Move[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSolving, setIsSolving] = useState(false);
@@ -39,6 +40,7 @@ export default function App() {
   const handleCubeChange = (nextCube: CubeState) => {
     setCubeState(nextCube);
     setValidation(validateCube(nextCube));
+    setValidationAttempted(false);
     setMoves([]);
     setScrambleMoves([]);
     setLegalHistoryMoves([]);
@@ -68,6 +70,7 @@ export default function App() {
   const handleValidate = () => {
     const result = validateCube(cubeState);
     setValidation(result);
+    setValidationAttempted(true);
     setSolverMessage(
       result.valid
         ? 'Validation passed: color counts and physical pieces are valid.'
@@ -78,6 +81,7 @@ export default function App() {
   const handleSolve = async () => {
     const result = validateCube(cubeState);
     setValidation(result);
+    setValidationAttempted(true);
     if (!result.valid || isAnimating) return;
 
     setIsSolving(true);
@@ -150,6 +154,7 @@ export default function App() {
     const solution = inverseMoves(scramble);
     setCubeState(scrambled);
     setValidation(validateCube(scrambled));
+    setValidationAttempted(true);
     setScrambleMoves(scramble);
     setLegalHistoryMoves(scramble);
     setMoves(solution);
@@ -165,6 +170,7 @@ export default function App() {
     const solved = createSolvedCube();
     setCubeState(solved);
     setValidation(validateCube(solved));
+    setValidationAttempted(false);
     setScrambleMoves([]);
     setLegalHistoryMoves([]);
     setMoves([]);
@@ -190,6 +196,7 @@ export default function App() {
     const nextCube = applyMove(cubeState, move);
     setCubeState(nextCube);
     setValidation(validateCube(nextCube));
+    setValidationAttempted(true);
     setScrambleMoves([]);
     setLegalHistoryMoves((history) => [...history, move]);
     setMoves([]);
@@ -227,6 +234,7 @@ export default function App() {
               cubeState={cubeState}
               selectedColor={selectedColor}
               validation={validation}
+              validationAttempted={validationAttempted}
               onSelectedColorChange={setSelectedColor}
               onCubeChange={handleCubeChange}
               onValidate={handleValidate}
@@ -245,7 +253,11 @@ export default function App() {
               <div className="grid gap-3 text-sm text-slate-700 md:grid-cols-3">
                 <div>
                   <strong className="block text-slate-950">Validation</strong>
-                  {liveValidation.valid ? 'Color counts are valid.' : 'Adjust counts before solving.'}
+                  {!validationAttempted
+                    ? 'Press Validate before solving.'
+                    : validation.valid
+                      ? 'Cube validated.'
+                      : 'Validation failed.'}
                 </div>
                 <div>
                   <strong className="block text-slate-950">Animation Lock</strong>
@@ -266,7 +278,7 @@ export default function App() {
               isPlaying={isPlaying}
               isAnimating={isAnimating}
               isSolving={isSolving}
-              canSolve={liveValidation.valid}
+              canSolve={validationAttempted && validation.valid}
               onSolve={handleSolve}
               onNext={startNextMove}
               onPrevious={startPreviousMove}
