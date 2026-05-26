@@ -1,5 +1,5 @@
 import { Camera, CheckCircle2, Paintbrush, RefreshCw, Send, Settings2, Upload } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CameraScanner } from '../components/Scanner/CameraScanner';
 import { DetectedFaceGrid } from '../components/Scanner/DetectedFaceGrid';
 import { FaceScanGuide } from '../components/Scanner/FaceScanGuide';
@@ -64,6 +64,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
   const [message, setMessage] = useState('Choose live camera or upload an image.');
   const [inputMode, setInputMode] = useState<InputMode>('camera');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewLabel, setPreviewLabel] = useState<string | null>(null);
   const [lastSavedFace, setLastSavedFace] = useState<ScannerFaceLabel | null>(null);
   const [debugMode, setDebugMode] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -81,6 +82,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
       if (current) URL.revokeObjectURL(current);
       return URL.createObjectURL(file);
     });
+    setPreviewLabel(`${targetFace} face - ${file.name}`);
     setIsScanning(true);
     setMessage('Scanning image...');
 
@@ -124,6 +126,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
       if (current) URL.revokeObjectURL(current);
       return null;
     });
+    setPreviewLabel(null);
     setDetected(null);
     setLastSavedFace(null);
     setMessage(`Retake ${face} face or upload a clearer image.`);
@@ -152,10 +155,6 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
     if (nextFace) {
       setFace(nextFace);
       setDetected(inputMode === 'manual' ? fallbackStickers(nextFace) : null);
-      setPreviewUrl((current) => {
-        if (current) URL.revokeObjectURL(current);
-        return null;
-      });
       setMessage(`Saved ${face} face. Next: scan ${nextFace}.`);
     } else {
       setMessage(`Saved ${face} face. All faces are ready to send to the solver.`);
@@ -173,6 +172,12 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
   const scannedCube = buildScannedCube();
   const validation = validateCube(scannedCube);
   const allFacesSaved = SCAN_ORDER.every((label) => savedFaces[label]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   return (
     <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1800px] p-4">
@@ -239,7 +244,12 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
           <section className="panel rounded-lg p-4">
             <h2 className="mb-2 text-lg font-semibold text-slate-950">Last Captured Image</h2>
             {previewUrl ? (
-              <img src={previewUrl} alt="Last scanned cube face" className="aspect-video w-full rounded-lg border border-slate-200 object-cover" />
+              <figure>
+                <img src={previewUrl} alt="Last scanned cube face" className="aspect-video w-full rounded-lg border border-slate-200 object-cover" />
+                <figcaption className="mt-2 truncate text-xs text-slate-500">
+                  {previewLabel ?? 'Latest captured scanner image'}
+                </figcaption>
+              </figure>
             ) : (
               <div className="flex aspect-video items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-500">
                 No image captured yet

@@ -20,6 +20,7 @@ export function ImageUploadScanner({ face, onScanFile }: Props) {
         onChange={(event) => {
           const file = event.currentTarget.files?.[0];
           if (file) onScanFile(file, face);
+          event.currentTarget.value = '';
         }}
       />
     </section>
