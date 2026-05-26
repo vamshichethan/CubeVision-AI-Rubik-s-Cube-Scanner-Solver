@@ -30,6 +30,8 @@ export default function App() {
   const [solverMessage, setSolverMessage] = useState('Ready for a verified solution.');
   const [scrambleMoves, setScrambleMoves] = useState<Move[]>([]);
   const [legalHistoryMoves, setLegalHistoryMoves] = useState<Move[]>([]);
+  const [latestScannedCube, setLatestScannedCube] = useState<CubeState | null>(null);
+  const [recoveryReferenceCube, setRecoveryReferenceCube] = useState<CubeState | null>(null);
 
   const isAnimating = Boolean(animation);
   const liveValidation = useMemo(() => validateCube(cubeState), [cubeState]);
@@ -288,6 +290,8 @@ export default function App() {
           cubeState={cubeState}
           onSaveFace={handleScannedFaceSave}
           onUseCube={(nextCube) => {
+            setRecoveryReferenceCube(cloneCube(cubeState));
+            setLatestScannedCube(cloneCube(nextCube));
             handleCubeChange(nextCube);
             setCurrentPage('workspace');
           }}
@@ -295,6 +299,8 @@ export default function App() {
       ) : currentPage === 'recovery' ? (
         <RecoveryPage
           cubeState={cubeState}
+          referenceCube={recoveryReferenceCube}
+          scannedCube={latestScannedCube}
           onUseRecalculatedSolution={(nextMoves) => {
             setMoves(nextMoves);
             setCurrentIndex(0);

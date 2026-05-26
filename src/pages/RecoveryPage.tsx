@@ -4,10 +4,12 @@ import type { CubeState, Move } from '../types/cube';
 
 type Props = {
   cubeState: CubeState;
+  referenceCube: CubeState | null;
+  scannedCube: CubeState | null;
   onUseRecalculatedSolution: (moves: Move[]) => void;
 };
 
-export function RecoveryPage({ cubeState, onUseRecalculatedSolution }: Props) {
+export function RecoveryPage({ cubeState, referenceCube, scannedCube, onUseRecalculatedSolution }: Props) {
   return (
     <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1280px] p-4">
       <div className="mb-4 flex flex-col gap-2">
@@ -21,7 +23,12 @@ export function RecoveryPage({ cubeState, onUseRecalculatedSolution }: Props) {
           and load a recalculated continuation when needed.
         </p>
       </div>
-      <ScanVerificationPanel cubeState={cubeState} onUseRecalculatedSolution={onUseRecalculatedSolution} />
+      <ScanVerificationPanel
+        cubeState={cubeState}
+        referenceCube={referenceCube}
+        scannedCube={scannedCube}
+        onUseRecalculatedSolution={onUseRecalculatedSolution}
+      />
     </main>
   );
 }

@@ -16,18 +16,22 @@ type ActualOption = (typeof ACTUAL_OPTIONS)[number];
 
 type Props = {
   cubeState: CubeState;
+  referenceCube: CubeState | null;
+  scannedCube: CubeState | null;
   onUseRecalculatedSolution: (moves: Move[]) => void;
 };
 
-export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: Props) {
+export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, onUseRecalculatedSolution }: Props) {
   const [expectedMoveToken, setExpectedMoveToken] = useState("U'");
   const [result, setResult] = useState<MistakeDetectionResult | null>(null);
   const [actualMoveToken, setActualMoveToken] = useState<ActualOption>('U');
+  const [useScannerOutput, setUseScannerOutput] = useState(true);
 
   const expectedMove = useMemo(() => parseMove(expectedMoveToken) ?? { face: 'U' as const, prime: true }, [expectedMoveToken]);
+  const hasScannerSnapshot = Boolean(scannedCube && referenceCube);
 
   const runVerification = () => {
-    const previousState = cloneCube(cubeState);
+    const previousState = cloneCube(useScannerOutput && referenceCube ? referenceCube : cubeState);
     const expectedState = applyMove(previousState, expectedMove);
     const actualMove =
       actualMoveToken === 'same'
@@ -35,8 +39,13 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
         : actualMoveToken === 'low'
           ? expectedMove
           : parseMove(actualMoveToken) ?? expectedMove;
-    const actualState = actualMoveToken === 'low' ? makeDemoMistake(previousState, expectedMove) : applyMove(previousState, actualMove);
-    const scanConfidence = actualMoveToken === 'low' ? 0.62 : 0.95;
+    const actualState =
+      useScannerOutput && scannedCube
+        ? scannedCube
+        : actualMoveToken === 'low'
+          ? makeDemoMistake(previousState, expectedMove)
+          : applyMove(previousState, actualMove);
+    const scanConfidence = useScannerOutput && scannedCube ? 0.91 : actualMoveToken === 'low' ? 0.62 : 0.95;
     setResult(verifyMoveStep(previousState, expectedState, actualState, expectedMove, scanConfidence));
   };
 
@@ -79,6 +88,39 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
         </div>
       </div>
 
+      <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
+        <div className="mb-2 text-sm font-semibold text-slate-800">Actual State Source</div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            disabled={!hasScannerSnapshot}
+            onClick={() => setUseScannerOutput(true)}
+            className={[
+              'focus-ring rounded-md border px-3 py-2 text-left text-sm font-semibold',
+              useScannerOutput && hasScannerSnapshot ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300 bg-white text-slate-700',
+              !hasScannerSnapshot ? 'cursor-not-allowed opacity-50' : ''
+            ].join(' ')}
+          >
+            Latest scanner CubeState
+          </button>
+          <button
+            type="button"
+            onClick={() => setUseScannerOutput(false)}
+            className={[
+              'focus-ring rounded-md border px-3 py-2 text-left text-sm font-semibold',
+              !useScannerOutput || !hasScannerSnapshot ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700'
+            ].join(' ')}
+          >
+            Manual simulation
+          </button>
+        </div>
+        <p className="mt-2 text-xs leading-5 text-slate-600">
+          {hasScannerSnapshot
+            ? 'Recovery will compare the previous solver state against the latest CubeState sent from Scanner.'
+            : 'No complete scanner CubeState has been sent yet. Use Scanner, save all six faces, then send to solver.'}
+        </p>
+      </div>
+
       <div className="mb-4 grid gap-3 lg:grid-cols-[220px_1fr]">
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
           <label className="mb-2 block text-sm font-medium text-slate-700">Expected move</label>
@@ -98,7 +140,9 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
             ))}
           </div>
 
-          <label className="mb-2 block text-sm font-medium text-slate-700">Actual scanned move</label>
+          <label className="mb-2 block text-sm font-medium text-slate-700">
+            {useScannerOutput && hasScannerSnapshot ? 'Simulation disabled' : 'Actual scanned move'}
+          </label>
           <div className="grid grid-cols-3 gap-1.5">
             {ACTUAL_OPTIONS.map((value) => {
               const label = value === 'same' ? 'Correct' : value === 'low' ? 'Low scan' : value;
@@ -106,10 +150,12 @@ export function ScanVerificationPanel({ cubeState, onUseRecalculatedSolution }: 
               <button
                 key={value}
                 type="button"
+                disabled={useScannerOutput && hasScannerSnapshot}
                 onClick={() => setActualMoveToken(value)}
                 className={[
                   'focus-ring rounded-md border px-2 py-1 text-center text-sm font-semibold',
-                  actualMoveToken === value ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700'
+                  actualMoveToken === value ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700',
+                  useScannerOutput && hasScannerSnapshot ? 'cursor-not-allowed opacity-40' : ''
                 ].join(' ')}
               >
                 {label}
