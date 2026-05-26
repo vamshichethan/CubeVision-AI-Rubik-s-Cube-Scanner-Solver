@@ -1,5 +1,6 @@
 import { createSolvedCube } from './cubeState';
 import { applyMove, applyMoves, cubeToCompactString, inverseMoves, moveToString, parseMoves } from './moves';
+import { solveCube } from './solverApi';
 import type { CubeState, Move } from '../types/cube';
 import type { BenchmarkAlgorithm, BenchmarkDifficulty, BenchmarkReport, BenchmarkResult } from '../types/benchmark';
 
@@ -221,13 +222,13 @@ function aStar(start: CubeState, target: string, maxDepth: number, timeoutMs: nu
   };
 }
 
-function runAlgorithm(
+async function runAlgorithm(
   algorithm: BenchmarkAlgorithm,
   start: CubeState,
   target: string,
   scrambleDepth: number,
   timeoutMs: number
-): BenchmarkResult {
+): Promise<BenchmarkResult> {
   const maxDepth = algorithm === 'BFS' ? Math.min(scrambleDepth, 6) : scrambleDepth + 1;
   const startedAt = performance.now();
   let output: SearchOutput;
@@ -241,11 +242,17 @@ function runAlgorithm(
   } else if (algorithm === 'IDA*') {
     output = iddfs(start, target, maxDepth, timeoutMs, true);
   } else {
+    const result = await solveCube(start);
     output = {
-      success: false,
-      solution: [],
-      stats: { nodesExplored: 0, maxDepthReached: 0, peakFrontier: 0, timedOut: false },
-      notes: 'Kociemba is not connected yet; backend/WebAssembly integration is required.'
+      success: result.success,
+      solution: result.moves,
+      stats: {
+        nodesExplored: result.nodesExplored,
+        maxDepthReached: result.depthReached,
+        peakFrontier: Math.max(1, result.moves.length),
+        timedOut: false
+      },
+      notes: result.message
     };
   }
 
@@ -280,13 +287,13 @@ export async function runBenchmark(
   const target = cubeToCompactString(solved);
   const inverseSolution = inverseMoves(scrambleMoves).map(moveToString).join(' ');
 
-  const results = selectedAlgorithms.map((algorithm) => {
-    const result = runAlgorithm(algorithm, start, target, scrambleMoves.length, timeoutMs);
+  const results = await Promise.all(selectedAlgorithms.map(async (algorithm) => {
+    const result = await runAlgorithm(algorithm, start, target, scrambleMoves.length, timeoutMs);
     if (result.success) {
       return { ...result, notes: `${result.notes} Expected inverse: ${inverseSolution}.` };
     }
     return result;
-  });
+  }));
 
   return {
     scramble,

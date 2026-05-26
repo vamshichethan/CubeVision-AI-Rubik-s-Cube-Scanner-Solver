@@ -109,7 +109,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
     } catch {
       if (file.name.includes('demo-capture')) {
         setDetected(fallbackStickers(targetFace));
-        setMessage('Demo face generated. Correct highlighted stickers before saving.');
+        setMessage('Demo-only synthetic face generated. Correct highlighted stickers before saving.');
       } else {
         setDetected(null);
         setMessage('No 3x3 face was detected. Retake the photo, upload a clearer image, or switch to Manual.');
@@ -214,7 +214,7 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
                         ? 'Start camera and capture a face.'
                         : mode === 'upload'
                           ? 'Upload one cube face image.'
-                          : 'Click stickers to correct this face manually.'
+                          : 'Manual mode starts from a solved-face template for correction; it is not camera detection.'
                     );
                   }}
                   className={[
@@ -257,9 +257,9 @@ export function ScannerPage({ cubeState, onSaveFace, onUseCube }: Props) {
                 {inputMode === 'upload' ? 'Upload Scanner Active' : 'Manual Correction Active'}
               </h2>
               <p className="text-sm text-slate-600">
-                {inputMode === 'upload'
-                  ? 'Use the upload control on the left, then review confidence scores on the right.'
-                  : 'Click a sticker in the detected face grid and choose the correct color.'}
+              {inputMode === 'upload'
+                ? 'Use the upload control on the left, then review confidence scores on the right.'
+                  : 'Manual mode uses a template face so you can enter colors directly without pretending it came from CV.'}
               </p>
             </section>
           )}

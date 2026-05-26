@@ -111,7 +111,7 @@ export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, o
               !useScannerOutput || !hasScannerSnapshot ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-300 bg-white text-slate-700'
             ].join(' ')}
           >
-            Manual simulation
+            Demo-only manual simulation
           </button>
         </div>
         <p className="mt-2 text-xs leading-5 text-slate-600">
@@ -141,7 +141,7 @@ export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, o
           </div>
 
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            {useScannerOutput && hasScannerSnapshot ? 'Simulation disabled' : 'Actual scanned move'}
+            {useScannerOutput && hasScannerSnapshot ? 'Simulation disabled' : 'Demo-only actual move'}
           </label>
           <div className="grid grid-cols-3 gap-1.5">
             {ACTUAL_OPTIONS.map((value) => {
@@ -216,7 +216,7 @@ export function ScanVerificationPanel({ cubeState, referenceCube, scannedCube, o
             className="focus-ring col-span-2 flex items-center justify-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
           >
             <Shuffle className="h-4 w-4" />
-            Demo Wrong Move
+            Demo-only wrong move
           </button>
         </div>
       </div>

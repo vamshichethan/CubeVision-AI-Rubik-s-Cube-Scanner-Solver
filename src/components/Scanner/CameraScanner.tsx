@@ -129,9 +129,12 @@ export function CameraScanner({ face, onCapture }: Props) {
           onClick={captureDemoFrame}
           className="focus-ring rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >
-          Demo Capture
+          Demo-only synthetic capture
         </button>
       </div>
+      <p className="mt-2 text-xs text-slate-500">
+        Demo-only capture generates a synthetic test image. Use Capture Frame for real camera scanning.
+      </p>
     </section>
   );
 }

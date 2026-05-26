@@ -12,7 +12,19 @@ The input system supports:
 - Six-face scan progress
 - Validation before sending CubeState to the solver
 
-The solution player no longer loads a fake hardcoded 10-move solution for arbitrary states. If a real solver is not connected, it shows a safe message instead of playing wrong moves.
+The solution player no longer loads a fake hardcoded 10-move solution for arbitrary states. It uses a real Kociemba two-phase solver path: first through the optional Node backend, then through the same Kociemba package in the browser if the backend is not running.
+
+Run the optional solver backend:
+
+```bash
+npm run solver:backend
+```
+
+Then run the frontend:
+
+```bash
+npm run dev
+```
 
 ## Pages
 
@@ -81,6 +93,15 @@ scanner/
   requirements.txt
 ```
 
+Solver backend:
+
+```text
+backend/solver/
+  server.js
+```
+
+`POST /api/solve` accepts the current `CubeState`, converts its facelets into Kociemba order, and returns a move sequence from the cubejs implementation of Herbert Kociemba's two-phase algorithm. The old browser depth-limited fallback search was removed so failed solves are reported honestly instead of loading guessed moves.
+
 ## Scanner API
 
 ```http
@@ -134,15 +155,15 @@ src/components/MistakeDetection/
   ConfidenceIndicator.tsx
 ```
 
-The dashboard includes a demo-friendly verification panel:
+The dashboard includes clearly labeled demo-only controls for interview walkthroughs:
 
 - Select expected move
-- Simulate correct move, wrong move, or low-confidence scan
+- Simulate correct move, wrong move, or low-confidence scan with controls labeled as demo-only
 - Verify scanned state
 - Show expected vs detected move
 - Show confidence and mismatch count
 - Suggest recovery
-- Recalculate a mock updated solution and send it to the move timeline
+- Load a recovery sequence into the move timeline for demonstration
 
 ## State Comparison Strategy
 
