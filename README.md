@@ -155,15 +155,15 @@ src/components/MistakeDetection/
   ConfidenceIndicator.tsx
 ```
 
-The dashboard includes clearly labeled demo-only controls for interview walkthroughs:
+The recovery page is now scanner-first for real-world use:
 
 - Select expected move
-- Simulate correct move, wrong move, or low-confidence scan with controls labeled as demo-only
-- Verify scanned state
+- Send a real six-face CubeState from Scanner
+- Verify the scanned physical state against the expected virtual state
 - Show expected vs detected move
 - Show confidence and mismatch count
 - Suggest recovery
-- Load a recovery sequence into the move timeline for demonstration
+- Recalculate a real Kociemba solution from the scanned state
 
 ## State Comparison Strategy
 
@@ -209,7 +209,7 @@ If the state no longer matches the expected path, the recovery system can:
 - Manually correct low-confidence stickers
 - Recalculate a new solution from the scanned state
 
-The current recalculator is a scaffold. Future versions will call the C++ solver through WebAssembly or a backend service.
+The recalculator calls the same real Kociemba solver path used by the main solution player, so recovery continues from the scanned CubeState instead of loading demo moves.
 
 ## Handling Noisy CV Scans
 

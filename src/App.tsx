@@ -306,9 +306,10 @@ export default function App() {
         />
       ) : currentPage === 'recovery' ? (
         <RecoveryPage
-          cubeState={cubeState}
           referenceCube={recoveryReferenceCube}
           scannedCube={latestScannedCube}
+          expectedTimelineMove={moves[currentIndex] ?? null}
+          onOpenScanner={() => setCurrentPage('scanner')}
           onUseRecalculatedSolution={(nextMoves) => {
             setMoves(nextMoves);
             setCurrentIndex(0);

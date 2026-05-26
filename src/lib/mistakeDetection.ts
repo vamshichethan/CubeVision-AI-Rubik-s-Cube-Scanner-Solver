@@ -1,4 +1,4 @@
-import { cloneCube, FACE_ORDER } from './cubeState';
+import { FACE_ORDER } from './cubeState';
 import { applyMove, moveToString, parseMove } from './moves';
 import type { CubeState, Move } from '../types/cube';
 import type { MistakeDetectionResult } from '../types/mistakeDetection';
@@ -105,11 +105,4 @@ export function verifyMoveStep(
     expectedState,
     actualState
   };
-}
-
-export function makeDemoMistake(previousState: CubeState, expectedMove: Move): CubeState {
-  const token = moveToString(expectedMove);
-  const wrongToken = token.endsWith("'") ? token.replace("'", '') : `${token}'`;
-  const wrongMove = parseMove(wrongToken) ?? expectedMove;
-  return applyMove(cloneCube(previousState), wrongMove);
 }

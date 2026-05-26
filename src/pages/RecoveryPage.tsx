@@ -3,13 +3,20 @@ import { ScanVerificationPanel } from '../components/MistakeDetection/ScanVerifi
 import type { CubeState, Move } from '../types/cube';
 
 type Props = {
-  cubeState: CubeState;
   referenceCube: CubeState | null;
   scannedCube: CubeState | null;
+  expectedTimelineMove: Move | null;
+  onOpenScanner: () => void;
   onUseRecalculatedSolution: (moves: Move[]) => void;
 };
 
-export function RecoveryPage({ cubeState, referenceCube, scannedCube, onUseRecalculatedSolution }: Props) {
+export function RecoveryPage({
+  referenceCube,
+  scannedCube,
+  expectedTimelineMove,
+  onOpenScanner,
+  onUseRecalculatedSolution
+}: Props) {
   return (
     <main className="mx-auto min-h-[calc(100vh-89px)] max-w-[1280px] p-4">
       <div className="mb-4 flex flex-col gap-2">
@@ -24,9 +31,10 @@ export function RecoveryPage({ cubeState, referenceCube, scannedCube, onUseRecal
         </p>
       </div>
       <ScanVerificationPanel
-        cubeState={cubeState}
         referenceCube={referenceCube}
         scannedCube={scannedCube}
+        expectedTimelineMove={expectedTimelineMove}
+        onOpenScanner={onOpenScanner}
         onUseRecalculatedSolution={onUseRecalculatedSolution}
       />
     </main>
