@@ -2,9 +2,9 @@
 
 # 🧊 CubeVision AI
 
-### Rubik's Cube Scanner, Solver, Validator, Visualizer, Recovery Coach, and Benchmark Lab
+### 📷 Scanner • 🧠 Solver • ✅ Validator • 🎮 3D Visualizer • 🛟 Recovery Coach • 📊 Benchmark Lab
 
-**Scan a cube. Correct uncertain stickers. Validate the state. Solve with Kociemba. Animate moves in 3D. Recover from real-world mistakes. Benchmark solver strategies.**
+**📸 Scan a cube. 🎯 Correct uncertain stickers. ✅ Validate the state. 🧩 Solve with Kociemba. 🎮 Animate moves in 3D. 🛟 Recover from real-world mistakes. 📊 Benchmark solver strategies.**
 
 ![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=111111)
 ![3D](https://img.shields.io/badge/3D-Three.js-111111?style=for-the-badge&logo=threedotjs)
@@ -13,37 +13,37 @@
 ![Backend](https://img.shields.io/badge/API-Node%20%2B%20Vercel-000000?style=for-the-badge&logo=vercel)
 ![Status](https://img.shields.io/badge/Status-Deployed-success?style=for-the-badge)
 
-**Live App:** [cubevision-ai.vercel.app](https://cubevision-ai.vercel.app)  
-**Latest Deployment:** [cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app](https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app)  
-**Solver API Health:** [cubevision-ai.vercel.app/api/health](https://cubevision-ai.vercel.app/api/health)  
-**Repository:** [GitHub](https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver)
+**🚀 Live App:** [cubevision-ai.vercel.app](https://cubevision-ai.vercel.app)  
+**🔗 Latest Deployment:** [cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app](https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app)  
+**🩺 Solver API Health:** [cubevision-ai.vercel.app/api/health](https://cubevision-ai.vercel.app/api/health)  
+**💻 Repository:** [GitHub](https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver)
 
-[Live Deployment](https://cubevision-ai.vercel.app) • [Features](#features) • [Architecture](#architecture) • [Algorithms](#algorithms-used) • [Run Locally](#run-locally) • [Interview Explanation](#placement-interview-explanation)
+[🚀 Live Deployment](https://cubevision-ai.vercel.app) • [✨ Features](#features) • [🏗️ Architecture](#architecture) • [🧮 Algorithms](#algorithms-used) • [🛠️ Run Locally](#run-locally) • [🎤 Interview Explanation](#placement-interview-explanation)
 
 </div>
 
 ---
 
-## Project Overview
+## 🌟 Project Overview
 
 **CubeVision AI** is a production-style Rubik's Cube assistant built as a complete multi-phase engineering project. It combines a React + TypeScript frontend, a Three.js cube visualizer, a deployable Kociemba solver backend, a Python OpenCV scanner module, deep validation ideas, recovery logic, and benchmark tooling.
 
 The goal is not just to show a static solver. The app is designed around the real workflow of a person solving a physical cube:
 
-1. Capture or manually enter all six cube faces.
-2. Validate color counts, centers, and physical piece structure.
-3. Generate a real solution using a Kociemba two-phase solver.
-4. Animate each move in a 3D cube.
-5. Rescan the real cube after a move.
-6. Detect whether the user made a mistake.
-7. Recalculate the remaining solution from the scanned state.
-8. Compare solver strategies through a benchmark dashboard.
+1. 📸 Capture or manually enter all six cube faces.
+2. ✅ Validate color counts, centers, and physical piece structure.
+3. 🧠 Generate a real solution using a Kociemba two-phase solver.
+4. 🎮 Animate each move in a 3D cube.
+5. 🔁 Rescan the real cube after a move.
+6. 🛟 Detect whether the user made a mistake.
+7. 🧩 Recalculate the remaining solution from the scanned state.
+8. 📊 Compare solver strategies through a benchmark dashboard.
 
 ---
 
-## Live Deployment
+## 🚀 Live Deployment
 
-| Service | Link | Purpose |
+| 🚀 Service | 🔗 Link | 🎯 Purpose |
 |---|---|---|
 | Frontend + Solver API | [https://cubevision-ai.vercel.app](https://cubevision-ai.vercel.app) | React app deployed with Vercel serverless API |
 | Latest Production Deployment | [https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app](https://cubevision-q7ab6do52-vamshichethanam231cs162-9232s-projects.vercel.app) | Direct URL for the latest production build |
@@ -55,46 +55,46 @@ The OpenCV scanner module is included in the repository as a Python/FastAPI serv
 
 ---
 
-## Features
+## ✨ Features
 
-### 1. Cube Input System
+### 1. 🎨 Cube Input System
 
-- Live camera capture using browser camera APIs.
-- Image upload for a single cube face.
-- Manual input panel for direct sticker painting.
-- Six-face scan flow: `U`, `D`, `F`, `B`, `L`, `R`.
-- Confidence review for every detected sticker.
-- Manual correction fallback for low-confidence stickers.
-- Last captured image preview with file/face caption.
-- Scanner output can be sent directly to the solver and recovery system.
+- 📷 Live camera capture using browser camera APIs.
+- 🖼️ Image upload for a single cube face.
+- 🎨 Manual input panel for direct sticker painting.
+- 🧭 Six-face scan flow: `U`, `D`, `F`, `B`, `L`, `R`.
+- 🎯 Confidence review for every detected sticker.
+- ✍️ Manual correction fallback for low-confidence stickers.
+- 🧾 Last captured image preview with file/face caption.
+- 🔁 Scanner output can be sent directly to the solver and recovery system.
 
-### 2. OpenCV Scanner Module
+### 2. 📷 OpenCV Scanner Module
 
 The scanner backend is built with Python, OpenCV, NumPy, and FastAPI.
 
 It supports:
 
-- Image decoding from upload/camera frames.
-- Square-like contour detection.
-- 3x3 grid extraction.
-- Sticker center crop extraction.
-- Average HSV computation.
-- HSV color classification for white, yellow, red, orange, blue, and green.
-- Confidence scoring.
-- Validation after six faces.
+- 🖼️ Image decoding from upload/camera frames.
+- 🔲 Square-like contour detection.
+- 🧩 3x3 grid extraction.
+- 🎯 Sticker center crop extraction.
+- 🌈 Average HSV computation.
+- 🎨 HSV color classification for white, yellow, red, orange, blue, and green.
+- 📈 Confidence scoring.
+- ✅ Validation after six faces.
 
-Important design decision: the app does **not** blindly trust computer vision output. Every detected face is reviewed by the user before saving.
+⚠️ Important design decision: the app does **not** blindly trust computer vision output. Every detected face is reviewed by the user before saving.
 
-### 3. 3D Cube Visualizer
+### 3. 🎮 3D Cube Visualizer
 
-- Built with Three.js and React Three Fiber.
-- Renders cubies with visible sticker colors.
-- Supports orbit controls.
-- Animates quarter-turn moves.
-- Prevents overlapping animations with an animation lock.
-- Updates cube state after every move.
+- 🧱 Built with Three.js and React Three Fiber.
+- 🎨 Renders cubies with visible sticker colors.
+- 🕹️ Supports orbit controls.
+- 🔄 Animates quarter-turn moves.
+- 🔒 Prevents overlapping animations with an animation lock.
+- ✅ Updates cube state after every move.
 
-### 4. Real Kociemba Solver
+### 4. 🧠 Real Kociemba Solver
 
 The solver path no longer uses fake hardcoded moves.
 
@@ -110,20 +110,20 @@ CubeState
 
 The frontend first tries the deployed `/api/solve` backend. If that endpoint is unavailable during local development, the same Kociemba package can run in the browser.
 
-### 5. Validation
+### 5. ✅ Validation
 
 Validation is explicit and user-visible.
 
-- Editing the cube resets the state to "Not validated yet".
-- The Solve button stays disabled until the cube is explicitly validated.
-- Validation checks:
+- ✏️ Editing the cube resets the state to "Not validated yet".
+- 🔒 The Solve button stays disabled until the cube is explicitly validated.
+- 🧪 Validation checks:
   - exactly 54 stickers
   - exactly 9 stickers per color
   - unique centers
   - edge/corner piece consistency in the frontend validator
   - C++ deep validator modules for piece/parity-oriented validation
 
-### 6. Real-World Recovery
+### 6. 🛟 Real-World Recovery
 
 Recovery is now scanner-first, not demo-only.
 
@@ -141,29 +141,29 @@ Kociemba recalculates from scanned CubeState
 
 This makes the app behave like an assistant for a physical cube, not just a static visualizer.
 
-### 7. Benchmark Dashboard
+### 7. 📊 Benchmark Dashboard
 
 The benchmark lab compares solving/search strategies:
 
-- BFS
-- IDDFS
-- A*
-- IDA*
-- Kociemba
+- 🧱 BFS
+- 🔁 IDDFS
+- ⭐ A*
+- ⚡ IDA*
+- 🧠 Kociemba
 
 Tracked metrics:
 
-- success/failure
-- solution length
-- time taken
-- nodes explored
-- memory estimate
-- max search depth
-- notes per algorithm
+- ✅ success/failure
+- 📏 solution length
+- ⏱️ time taken
+- 🌐 nodes explored
+- 🧮 memory estimate
+- 🕳️ max search depth
+- 📝 notes per algorithm
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```text
 CubeVision AI
@@ -201,25 +201,25 @@ CubeVision AI
 
 ---
 
-## Tech Stack
+## 🧰 Tech Stack
 
-| Layer | Technology |
+| 🧱 Layer | ⚙️ Technology |
 |---|---|
-| Frontend | React, TypeScript, Vite |
-| Styling | Tailwind CSS |
-| 3D | Three.js, React Three Fiber, Drei |
-| Solver Backend | Node.js, Vercel Serverless Functions |
-| Solver Algorithm | Kociemba two-phase via `cubejs` |
-| Scanner Backend | Python, FastAPI, OpenCV, NumPy |
-| Benchmark Engine | TypeScript frontend search + C++ benchmark modules |
-| C++ Core | C++17 OOP cube engine |
-| Deployment | Vercel |
+| 🎨 Frontend | React, TypeScript, Vite |
+| 💅 Styling | Tailwind CSS |
+| 🎮 3D | Three.js, React Three Fiber, Drei |
+| 🔌 Solver Backend | Node.js, Vercel Serverless Functions |
+| 🧠 Solver Algorithm | Kociemba two-phase via `cubejs` |
+| 📷 Scanner Backend | Python, FastAPI, OpenCV, NumPy |
+| 📊 Benchmark Engine | TypeScript frontend search + C++ benchmark modules |
+| ⚙️ C++ Core | C++17 OOP cube engine |
+| 🚀 Deployment | Vercel |
 
 ---
 
-## Algorithms Used
+## 🧮 Algorithms Used
 
-### Kociemba Two-Phase Solver
+### 🧠 Kociemba Two-Phase Solver
 
 Kociemba is practical for Rubik's Cube solving because it reduces the search space into two phases:
 
@@ -228,35 +228,35 @@ Kociemba is practical for Rubik's Cube solving because it reduces the search spa
 
 In CubeVision AI, the solver accepts the current `CubeState`, converts it into facelet notation, calls the Kociemba implementation, then converts the returned algorithm into animated moves.
 
-### BFS
+### 🧱 BFS
 
 Breadth-first search explores states level by level. It is complete and finds shortest paths for tiny scrambles, but memory usage explodes quickly.
 
-### IDDFS
+### 🔁 IDDFS
 
 Iterative deepening DFS uses low memory and searches depth by depth. It repeats work, but it is useful for small/medium search depths.
 
-### A*
+### ⭐ A*
 
 A* uses a priority queue with `f(n) = g(n) + h(n)`. It can be fast with a good heuristic, but it keeps many states in memory.
 
-### IDA*
+### ⚡ IDA*
 
 IDA* combines iterative deepening with heuristic bounds. It is more memory-efficient than A* and is a natural fit for large combinatorial state spaces.
 
-### Heuristic
+### 🧭 Heuristic
 
 The benchmark/search scaffold uses simple cube-state heuristics such as misplaced sticker estimates. This is intentionally replaceable with stronger pattern databases later.
 
-### Move Inference
+### 🛟 Move Inference
 
 For recovery, the system tries candidate moves like `R`, `R'`, `U`, `U'`, etc. It applies each candidate to the previous verified state and compares it with the scanned actual state. The closest match becomes the likely detected move.
 
 ---
 
-## API Documentation
+## 🔌 API Documentation
 
-### `GET /api/health`
+### 🩺 `GET /api/health`
 
 Returns the deployed solver status.
 
@@ -267,7 +267,7 @@ Returns the deployed solver status.
 }
 ```
 
-### `POST /api/solve`
+### 🧩 `POST /api/solve`
 
 Solves a cube from the current frontend `CubeState`.
 
@@ -299,9 +299,9 @@ Response:
 
 ---
 
-## Run Locally
+## 🛠️ Run Locally
 
-### Frontend
+### 🎨 Frontend
 
 ```bash
 npm install
@@ -314,7 +314,7 @@ Open:
 http://localhost:5173
 ```
 
-### Optional Local Solver Backend
+### 🔌 Optional Local Solver Backend
 
 The deployed app uses Vercel API functions. For local backend testing:
 
@@ -328,7 +328,7 @@ Local solver backend:
 http://127.0.0.1:8787/api/health
 ```
 
-### Python Scanner Backend
+### 📷 Python Scanner Backend
 
 ```bash
 python3 -m venv .venv
@@ -337,7 +337,7 @@ pip install -r scanner/requirements.txt
 uvicorn scanner.api:app --reload --port 8000
 ```
 
-### Build
+### 🏗️ Build
 
 ```bash
 npm run build
@@ -345,7 +345,7 @@ npm run build
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```text
 api/
@@ -391,7 +391,7 @@ src/*.cpp / src/*.h
 
 ---
 
-## Placement Interview Explanation
+## 🎤 Placement Interview Explanation
 
 CubeVision AI is a strong placement project because it is not just a CRUD app. It demonstrates frontend engineering, algorithms, 3D rendering, computer vision, backend APIs, deployment, validation, and system design.
 
@@ -401,39 +401,39 @@ In an interview, explain it like this:
 
 Important engineering points:
 
-- I modeled the cube as six faces with nine stickers each.
-- Moves are parsed as objects like `{ face: "R", prime: true }`.
-- The visualizer renders cubies and updates state after every animation.
-- The scanner uses HSV because raw RGB is unstable under lighting changes.
-- Low-confidence CV output is never trusted blindly.
-- The validator catches color-count and piece-consistency errors before solving.
-- The solver uses a real Kociemba two-phase algorithm instead of fake hardcoded moves.
-- Recovery compares expected state and scanned state to infer physical mistakes.
-- Benchmarking shows time-space tradeoffs between BFS, IDDFS, A*, IDA*, and Kociemba.
-- The deployed version uses Vercel API functions for the solver backend.
+- 🧊 I modeled the cube as six faces with nine stickers each.
+- 🔄 Moves are parsed as objects like `{ face: "R", prime: true }`.
+- 🎮 The visualizer renders cubies and updates state after every animation.
+- 🌈 The scanner uses HSV because raw RGB is unstable under lighting changes.
+- 🎯 Low-confidence CV output is never trusted blindly.
+- ✅ The validator catches color-count and piece-consistency errors before solving.
+- 🧠 The solver uses a real Kociemba two-phase algorithm instead of fake hardcoded moves.
+- 🛟 Recovery compares expected state and scanned state to infer physical mistakes.
+- 📊 Benchmarking shows time-space tradeoffs between BFS, IDDFS, A*, IDA*, and Kociemba.
+- 🚀 The deployed version uses Vercel API functions for the solver backend.
 
 ---
 
-## Future Improvements
+## 🔮 Future Improvements
 
-- Deploy Python OpenCV scanner backend separately.
-- Add ML-based color classifier for difficult lighting.
-- Add pattern database heuristics for IDA*.
-- Compile the C++ engine to WebAssembly.
-- Add voice guidance for physical solving.
-- Add AR overlays for the next move.
-- Add cubie-level orientation and parity UI explanations.
+- 🚀 Deploy Python OpenCV scanner backend separately.
+- 🤖 Add ML-based color classifier for difficult lighting.
+- 🧠 Add pattern database heuristics for IDA*.
+- ⚙️ Compile the C++ engine to WebAssembly.
+- 🔊 Add voice guidance for physical solving.
+- 🥽 Add AR overlays for the next move.
+- 🧩 Add cubie-level orientation and parity UI explanations.
 
 ---
 
-## Author
+## 👤 Author
 
 **Vamshi Chethan**  
 Project: CubeVision AI - Rubik's Cube Scanner & Solver
 
 <div align="center">
 
-### Built for real algorithmic, visual, and system-design depth.
+### ✨ Built for real algorithmic, visual, and system-design depth.
 
 [Live App](https://cubevision-ai.vercel.app) • [GitHub Repository](https://github.com/vamshichethan/CubeVision-AI-Rubik-s-Cube-Scanner-Solver)
 
